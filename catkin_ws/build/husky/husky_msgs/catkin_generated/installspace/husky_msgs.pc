@@ -1,8 +1,0 @@
-prefix=/home/tony/ugv/catkin_ws/install
-
-Name: husky_msgs
-Description: Description of husky_msgs
-Version: 0.3.1
-Cflags: -I/home/tony/ugv/catkin_ws/install/include
-Libs: -L/home/tony/ugv/catkin_ws/install/lib 
-Requires: std_msgs message_runtime

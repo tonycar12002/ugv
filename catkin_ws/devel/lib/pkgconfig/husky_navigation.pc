@@ -1,8 +1,0 @@
-prefix=/home/tony/ugv/catkin_ws/devel
-
-Name: husky_navigation
-Description: Description of husky_navigation
-Version: 0.3.1
-Cflags: 
-Libs: -L/home/tony/ugv/catkin_ws/devel/lib 
-Requires: 

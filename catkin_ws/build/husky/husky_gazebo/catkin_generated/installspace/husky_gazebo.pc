@@ -1,0 +1,8 @@
+prefix=/home/tony/ugv/catkin_ws/install
+
+Name: husky_gazebo
+Description: Description of husky_gazebo
+Version: 0.3.1
+Cflags: 
+Libs: -L/home/tony/ugv/catkin_ws/install/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/tony/ugv/catkin_ws/devel
+
+Name: husky_bringup
+Description: Description of husky_bringup
+Version: 0.3.1
+Cflags: 
+Libs: -L/home/tony/ugv/catkin_ws/devel/lib 
+Requires: 

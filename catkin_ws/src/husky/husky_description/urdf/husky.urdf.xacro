@@ -152,7 +152,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:if value="$(arg kinect_enabled)">
 
     <xacro:sensor_arch prefix="" parent="top_plate_link">
-      <origin xyz="-0.35 0 0.51" rpy="0 0 -3.14"/>
+      <origin xyz="0.35 0 0.22" rpy="0 0 -3.14"/>
     </xacro:sensor_arch>
     <joint name="kinect_frame_joint" type="fixed">
       <origin xyz="$(arg kinect_xyz)" rpy="$(arg kinect_rpy)" />
@@ -202,5 +202,14 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   <!-- Optional custom includes. -->
   <xacro:include filename="$(arg urdf_extras)" />
+  
+  <xacro:include filename="$(find husky_description)/urdf/accessories/velodyne_lidar.urdf.xacro" />
+  <xacro:VLP16_lidar parent="top_plate_front_link" name="velodyne" topic="/velodyne_points" hz="8" samples="1800" min_range="0" max_range="50.0" min_angle="-3.14" max_angle="3.14" noise="0.008">
+    <origin xyz="0 0 0.04" rpy="0 0 0" />
+  </xacro:VLP16_lidar>
 
+  <xacro:include filename="$(find husky_description)/urdf/accessories/camera.urdf.xacro" />
+  <xacro:depth_camera parent="top_plate_front_link" name="camera" >
+    <origin xyz="0 0 0.02" rpy="0 0 1.57" />
+ </xacro:depth_camera>
 </robot>

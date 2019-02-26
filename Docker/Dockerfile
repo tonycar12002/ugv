@@ -83,4 +83,6 @@ RUN apt-get update && apt-get install -y --fix-missing \
     ros-kinetic-lms1xx \
     ros-kinetic-twist* \
     ros-kinetic-interactive-markers \
-    ros-kinetic-interactive-marker-twist-server
+    ros-kinetic-interactive-marker-twist-server \
+    ros-kinetic-velodyne* \
+    ros-kinetic-gazebo-*

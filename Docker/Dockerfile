@@ -85,4 +85,6 @@ RUN apt-get update && apt-get install -y --fix-missing \
     ros-kinetic-interactive-markers \
     ros-kinetic-interactive-marker-twist-server \
     ros-kinetic-velodyne* \
-    ros-kinetic-gazebo-*
+    ros-kinetic-gazebo-* \
+    ros-kinetic-joint-state* \
+    ros-kinetic-diff-drive-controller 

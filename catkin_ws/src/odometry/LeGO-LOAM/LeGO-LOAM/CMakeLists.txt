@@ -20,10 +20,11 @@ find_package(catkin REQUIRED COMPONENTS
   cloud_msgs
 )
 
+find_package(Boost REQUIRED COMPONENTS timer)
 find_package(GTSAM REQUIRED QUIET)
 find_package(PCL REQUIRED QUIET)
 find_package(OpenCV REQUIRED QUIET)
-find_package(Boost REQUIRED COMPONENTS timer)
+
 
 catkin_package(
   INCLUDE_DIRS include

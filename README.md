@@ -1,11 +1,12 @@
 # UGV
 
-## How to build
+## How to run
+1. Make docker file
+```
+$ cd Docker
+$ docker build -t ugv -f Dockerfile .
+```
+2. Docker pull
 
-## ROS Topic and Message Type
-* Sensors
-* Motion
-    * Control
-        * topic: /husky_velocity_controller/cmd_vel
-        * type: geometry_msgs/Twist
+
 

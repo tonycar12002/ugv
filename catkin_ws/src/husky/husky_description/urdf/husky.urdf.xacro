@@ -166,6 +166,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>$(arg robot_namespace)</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      <legacyModeNS>true</legacyModeNS>
     </plugin>
   </gazebo>
 
@@ -204,12 +206,12 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:include filename="$(arg urdf_extras)" />
   
   <xacro:include filename="$(find husky_description)/urdf/accessories/velodyne_lidar.urdf.xacro" />
-  <xacro:VLP16_lidar parent="top_plate_front_link" name="velodyne" topic="/velodyne_points" hz="8" samples="1800" min_range="0" max_range="50.0" min_angle="-3.14" max_angle="3.14" noise="0.008">
-    <origin xyz="0 0 0.04" rpy="0 0 0" />
+  <xacro:VLP16_lidar parent="top_plate_front_link" name="velodyne" topic="/velodyne_points" hz="8" samples="1800" min_range="0.5" max_range="50.0" min_angle="-3.14" max_angle="3.14" noise="0.008">
+    <origin xyz="-0.1 0 0.15" rpy="0 0 0" />
   </xacro:VLP16_lidar>
 
   <xacro:include filename="$(find husky_description)/urdf/accessories/camera.urdf.xacro" />
   <xacro:depth_camera parent="top_plate_front_link" name="camera" >
-    <origin xyz="0 0 0.02" rpy="0 0 1.57" />
+    <origin xyz="0 0.0 0.02" rpy="0 0 0" />
  </xacro:depth_camera>
 </robot>

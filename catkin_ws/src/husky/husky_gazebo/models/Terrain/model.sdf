@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <model name="duckieTerrain">
+    
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Terrain/meshes/terrain.dae</uri>
+          </mesh>         
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <mesh>
+            <uri>model://Terrain/meshes/terrain.dae</uri>
+          </mesh>         
+        </geometry>
+      </visual>
+      <inertial>
+       <mass>300</mass>
+       <inertia>
+          <ixx>150</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>150</iyy>
+          <iyz>0</iyz>
+          <izz>150</izz>
+       </inertia>         
+      </inertial>
+    </link>
+  </model>
+</sdf>

@@ -79,4 +79,8 @@ RUN apt-get update -y
 RUN apt-get update && apt-get install -y --fix-missing \
     ros-kinetic-controller-manager \
     ros-kinetic-tf2* \
-    ros-kinetic-rtabmap*
+    ros-kinetic-rtabmap* \
+    ros-kinetic-lms1xx \
+    ros-kinetic-twist* \
+    ros-kinetic-interactive-markers \
+    ros-kinetic-interactive-marker-twist-server

@@ -168,6 +168,7 @@ void PreprocessNode::cbCloud(const sensor_msgs::PointCloud2ConstPtr& cloud_msg){
 	sensor_msgs::PointCloud2 cloud_out;
 	pcl::toROSMsg(*cloud, cloud_out);
 	cloud_out.header = cloud_msg->header;
+	cloud_out.header.stamp = ros::Time::now();
 	pub_cloud.publish(cloud_out);
 
 }

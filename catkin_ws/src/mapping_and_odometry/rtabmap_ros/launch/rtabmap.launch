@@ -186,10 +186,6 @@
           <param name="guess_frame_id"              type="string" value="$(arg odom_guess_frame_id)"/>
           <param name="guess_min_translation"       type="double" value="$(arg odom_guess_min_translation)"/>
           <param name="guess_min_rotation"          type="double" value="$(arg odom_guess_min_rotation)"/>
-
-          <param name="OdomLOAM/Sensor" value="0"/>
-          <param name="Odom/FilteringStrategy" value="1"/>
-          <param name="Odom/Strategy" value="1"/>
           
 
         </node>

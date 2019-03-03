@@ -1,0 +1,30 @@
+<launch>    
+    <arg name="veh" default="/"/>
+    <param name="use_sim_time" value="true" />
+
+    <!-- PointCloud preprocess -->
+    <arg name="preprocessing_factor" default="gazebo"/>
+    
+    <group ns="$(arg veh)">
+
+        <!-- PointCloud preprocess -->
+        <remap from="pcl_preprocessing/velodyne_points" to="velodyne_points"/>
+        <include file="$(find velodyne_perception)/launch/pcl_preprocessing.launch">
+            <arg name="preprocessing_factor" value="$(arg preprocessing_factor)"/>
+        </include>
+ 
+        <!-- PointCloud to laserscan -->
+        <remap from="cloud_in" to="/pcl_preprocessing/velodyne_points_preprocess"/>
+        <remap from="scan" to="/scan_from3d"/>
+        <include file="$(find pointcloud_to_laserscan)/launch/pointcloud_to_laserscan.launch">
+        </include>
+
+        <!-- Visual Odometry -->
+        <include file="$(find rtabmap_ros)/launch/rgbd_mapping.launch">
+        </include>
+
+        <!-- Path Planning -->
+
+
+    </group>
+</launch>

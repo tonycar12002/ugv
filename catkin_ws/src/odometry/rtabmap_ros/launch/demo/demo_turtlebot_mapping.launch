@@ -30,7 +30,7 @@
   <arg name="rgbd_odometry"     default="false"/>
   <arg name="rtabmapviz"        default="false"/>
   <arg name="localization"      default="false"/>
-  <arg name="simulation"        default="false"/>
+  <arg name="simulation"        default="true"/>
   <arg name="sw_registered"     default="false"/>
   <arg     if="$(arg localization)" name="args"  default=""/>
   <arg unless="$(arg localization)" name="args"  default="--delete_db_on_start"/>

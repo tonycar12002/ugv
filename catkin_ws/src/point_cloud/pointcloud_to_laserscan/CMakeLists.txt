@@ -21,12 +21,14 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
 )
+add_compile_options(-std=c++11)
 
 add_library(pointcloud_to_laserscan src/pointcloud_to_laserscan_nodelet.cpp)
 target_link_libraries(pointcloud_to_laserscan ${catkin_LIBRARIES})
 
 add_executable(pointcloud_to_laserscan_node src/pointcloud_to_laserscan_node.cpp)
 target_link_libraries(pointcloud_to_laserscan_node pointcloud_to_laserscan ${catkin_LIBRARIES})
+
 
 install(TARGETS pointcloud_to_laserscan pointcloud_to_laserscan_node
 	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

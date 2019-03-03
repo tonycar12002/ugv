@@ -25,7 +25,7 @@
   <arg name="localization"            default="false"/>
   
   <!-- sim time for convenience, if playing a rosbag -->
-  <arg name="use_sim_time"            default="false"/>
+  <arg name="use_sim_time"            default="true"/>
   <param if="$(arg use_sim_time)" name="use_sim_time" value="true"/>
   
   <!-- Corresponding config files -->
@@ -82,7 +82,7 @@
   <arg name="scan_normal_k"           default="0"/>
    
   <arg name="visual_odometry"          default="true"/>          <!-- Launch rtabmap visual odometry node -->
-  <arg name="icp_odometry"             default="true"/>         <!-- Launch rtabmap icp odometry node -->
+  <arg name="icp_odometry"             default="false"/>         <!-- Launch rtabmap icp odometry node -->
   <arg name="odom_topic"               default="odom"/>          <!-- Odometry topic name -->
   <arg name="vo_frame_id"              default="$(arg odom_topic)"/> <!-- Visual/Icp odometry frame ID for TF -->
   <arg name="odom_tf_angular_variance" default="1"/>             <!-- If TF is used to get odometry, this is the default angular variance -->
@@ -97,6 +97,12 @@
   <arg name="subscribe_user_data"      default="false"/>             <!-- user data synchronized subscription -->
   <arg name="user_data_topic"          default="/user_data"/>
   <arg name="user_data_async_topic"    default="/user_data_async" /> <!-- user data async subscription (rate should be lower than map update rate) -->
+  
+  <arg name="gps_topic"                default="/gps/fix" />         <!-- gps async subscription -->
+  
+  <arg name="tag_topic"                default="/tag_detections" />  <!-- apriltags async subscription -->
+  <arg name="tag_linear_variance"      default="0.0001" />
+  <arg name="tag_angular_variance"     default="9999" />             <!-- >=9999 means ignore rotation in optimization, when rotation estimation of the tag is not reliable -->
   
   <!-- These arguments should not be modified directly, see referred topics without "_relay" suffix above -->
   <arg if="$(arg compressed)"     name="rgb_topic_relay"           default="$(arg rgb_topic)_relay"/>
@@ -180,6 +186,12 @@
           <param name="guess_frame_id"              type="string" value="$(arg odom_guess_frame_id)"/>
           <param name="guess_min_translation"       type="double" value="$(arg odom_guess_min_translation)"/>
           <param name="guess_min_rotation"          type="double" value="$(arg odom_guess_min_rotation)"/>
+
+          <param name="OdomLOAM/Sensor" value="0"/>
+          <param name="Odom/FilteringStrategy" value="1"/>
+          <param name="Odom/Strategy" value="1"/>
+          
+
         </node>
 
         <!-- Stereo Odometry -->
@@ -253,6 +265,8 @@
       <param name="config_path"          type="string" value="$(arg cfg)"/>
       <param name="queue_size"           type="int" value="$(arg queue_size)"/>
       <param name="scan_normal_k"        type="int" value="$(arg scan_normal_k)"/>
+      <param name="landmark_linear_variance"   type="double" value="$(arg tag_linear_variance)"/>
+      <param name="landmark_angular_variance"  type="double" value="$(arg tag_angular_variance)"/>      
       
       <remap from="rgb/image"       to="$(arg rgb_topic_relay)"/>
       <remap from="depth/image"     to="$(arg depth_topic_relay)"/>
@@ -270,12 +284,14 @@
       <remap from="scan_cloud"             to="$(arg scan_cloud_topic)"/>
       <remap from="user_data"              to="$(arg user_data_topic)"/>
       <remap from="user_data_async"        to="$(arg user_data_async_topic)"/>
+      <remap from="gps/fix"                to="$(arg gps_topic)"/>
+      <remap from="tag_detections"         to="$(arg tag_topic)"/>
       <remap from="odom"                   to="$(arg odom_topic)"/>
       
       <!-- localization mode -->
-	  <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>
-	  <param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/>
-	  <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/>
+      <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>
+      <param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/>
+      <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/>
     </node>
   
     <!-- Visualisation RTAB-Map -->

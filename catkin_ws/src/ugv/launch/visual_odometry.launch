@@ -1,0 +1,33 @@
+<launch>    
+    <arg name="veh" default="/"/>
+
+    <!-- PointCloud preprocess -->
+    <arg name="preprocessing_factor" default="gazebo"/>
+
+    <!-- RGB-D Odometry -->
+    <arg name="rgb_topic"               default="/camera/rgb/image_raw" />
+    <arg name="depth_topic"  default="/camera/depth/image_raw" />
+    <arg name="camera_info_topic"       default="/camera/rgb/camera_info" />    
+    <arg name="wait_for_transform"      default="0.5"/>
+    
+    
+    <group ns="$(arg veh)">
+
+        <!-- PointCloud preprocess -->
+        <remap from="pcl_preprocessing/velodyne_points" to="velodyne_points"/>
+        <include file="$(find velodyne_perception)/launch/pcl_preprocessing.launch">
+            <arg name="preprocessing_factor" value="$(arg preprocessing_factor)"/>
+        </include>
+ 
+        <!-- PointCloud to laserscan -->
+        <remap from="cloud_in" to="/pcl_preprocessing/velodyne_points_preprocess"/>
+        <remap from="scan" to="/scan_from3d"/>
+        <include file="$(find pointcloud_to_laserscan)/launch/sample_node.launch">
+        </include>
+
+        <!-- laserscan to grid map -->
+        <include file="$(find pointcloud_to_laserscan)/launch/laserscan_to_costmap.launch">
+        </include>
+
+    </group>
+</launch>

@@ -9,24 +9,28 @@
  
   <!-- Choose visualization -->
   <arg name="rviz"                    default="false" />
-  <arg name="rtabmapviz"              default="false" /> 
+  <arg name="rtabmapviz"              default="true" /> 
   
   <!-- Localization-only mode -->
-  <arg name="localization"            default="true"/>
+  <arg name="localization"            default="false"/>
   
   <!-- Corresponding config files -->
   <arg name="rtabmapviz_cfg"          default="~/.ros/rtabmap_gui.ini" />
   <arg name="rviz_cfg"                default="$(find rtabmap_ros)/launch/config/rgbd.rviz" />
   
-  <arg name="frame_id"                default="camera_link"/>   <!-- Fixed frame id, you may set "base_link" or "base_footprint" if they are published -->
+  <arg name="frame_id"                default="base_link"/>   <!-- Fixed frame id, you may set "base_link" or "base_footprint" if they are published -->
   <arg name="database_path"           default="~/.ros/rtabmap.db"/>
-  <arg name="rtabmap_args"            default=""/>              <!-- delete_db_on_start, udebug -->
+  <arg name="rtabmap_args"            default="--delete_db_on_start"/>              <!-- delete_db_on_start, udebug -->
   <arg name="launch_prefix"           default=""/>              <!-- for debugging purpose, it fills launch-prefix tag of the nodes -->
   <arg name="approx_sync"             default="true"/>         <!-- if timestamps of the input topics are not synchronized -->
    
   <arg name="rgb_topic"               default="/camera/rgb/image_raw" />
   <arg name="depth_registered_topic"  default="/camera/depth/image_raw" />
   <arg name="camera_info_topic"       default="/camera/rgb/camera_info" />
+  <!--arg name="rgb_topic"               default="/X1/rgbd_camera/rgb/image_raw" />
+  <arg name="depth_registered_topic"  default="/X1/rgbd_camera/depth/image_raw" />
+  <arg name="camera_info_topic"       default="/X1/rgbd_camera/rgb/camera_info" /-->
+
   <arg name="compressed"              default="false"/>
    
   <arg name="subscribe_scan"          default="true"/>         <!-- Assuming 2D scan if set, rtabmap will do 3DoF mapping instead of 6DoF -->

@@ -1,0 +1,12 @@
+<launch>
+	<arg name="latitude" default="24.788808"/>
+	<arg name="longitude" default="121.000188"/>
+    <arg name="yaw_offset" default="121.000188"/>
+
+    <node pkg="gps_imu_odometry" type="localization_gps_imu.py" name="localization_gps_imu" respawn="false" output="screen">
+        <param name="latitude" value="$(arg latitude)"/>
+        <param name="longitude" value="$(arg longitude)"/>
+        <param name="yaw_offset" value="$(arg yaw_offset)"/>
+    </node>
+
+</launch>

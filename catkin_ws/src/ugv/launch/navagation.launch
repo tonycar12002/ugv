@@ -2,13 +2,23 @@
     <arg name="veh" default="/"/>
     <param name="use_sim_time" value="true" />
 
+
+    <!-- Param -->
+    <arg name="visual_odometry" default="false"/>
+
     <!-- PointCloud preprocess -->
     <arg name="preprocessing_factor" default="gazebo"/>
     
+    <!-- Scan to grid maop -->
+    <arg name="cell_size" default="0.5"/>
+    <arg name="map_length" default="35"/>
+    <arg name="sync_time" default="0.5"/>
+    <arg name="frame_id" default="odom"/>
+
     <group ns="$(arg veh)">
 
         <!-- PointCloud preprocess -->
-        <remap from="pcl_preprocessing/velodyne_points" to="velodyne_points"/>
+        <remap from="/pcl_preprocessing/velodyne_points" to="/velodyne_points"/>
         <include file="$(find velodyne_perception)/launch/pcl_preprocessing.launch">
             <arg name="preprocessing_factor" value="$(arg preprocessing_factor)"/>
         </include>
@@ -19,8 +29,27 @@
         <include file="$(find pointcloud_to_laserscan)/launch/pointcloud_to_laserscan.launch">
         </include>
 
-        <!-- Visual Odometry -->
-        <include file="$(find rtabmap_ros)/launch/rgbd_mapping.launch">
+        <group if="$(arg visual_odometry)">
+            <!-- Visual Odometry -->
+            <include file="$(find rtabmap_ros)/launch/rgbd_mapping.launch">
+            </include>
+        </group>
+        <group unless="$(arg visual_odometry)">
+            <!-- Visual Odometry -->
+            <remap from="localization_gps_imu/fix" to="fix"/>
+            <remap from="localization_gps_imu/imu/data" to="imu/data"/>
+            <include file="$(find gps_imu_odometry)/launch/localization_gps_imu.launch">
+            </include>
+        </group>
+
+        <!-- Local Grid map -->
+        <remap from="scan" to="/scan_from3d"/>
+        <remap from="odom" to="/localization_gps_imu/odometry"/> <!--/gazebo/gazebo_odometry  -->
+        <include file="$(find pointcloud_to_laserscan)/launch/local_cost2d.launch">
+            <arg name="cell_size"   value="$(arg cell_size)"/>
+            <arg name="map_length"  value="$(arg map_length)"/>
+            <arg name="sync_time"   value="$(arg sync_time)"/>
+            <arg name="frame_id"    value="$(arg frame_id)"/>
         </include>
 
         <!-- Path Planning -->

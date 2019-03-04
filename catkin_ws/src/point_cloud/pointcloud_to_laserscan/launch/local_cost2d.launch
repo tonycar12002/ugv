@@ -6,13 +6,14 @@
     <arg name="map_length" default="35"/>
     <arg name="sync_time" default="0.5"/>
     <arg name="frame_id" default="odom"/>
-
+    <arg name="vehicle_size" default="0.5"/>
     
     <node pkg="pointcloud_to_laserscan" type="local_cost2d.py" name="local_cost2d"  output="screen" clear_params="true" required="true">
         <param name="cell_size"     type="double"    value="$(arg cell_size)" />
         <param name="map_length"    type="int"      value="$(arg map_length)" />
         <param name="sync_time"     type="double"    value="$(arg sync_time)" />
         <param name="frame_id"      type="string"   value="$(arg frame_id)" />
+        <param name="vehicle_size"  type="double"   value="$(arg vehicle_size)" />
     </node>
 
 </launch>

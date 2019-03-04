@@ -13,7 +13,8 @@
     <arg name="cell_size" default="0.3"/>
     <arg name="map_length" default="40"/>
     <arg name="sync_time" default="0.5"/>
-    <arg name="frame_id" default="odom"/>
+    <arg name="frame_id" default="map"/>
+    <arg name="vehicle_size" default="0.3"/>
 
     <group ns="$(arg veh)">
 
@@ -35,25 +36,29 @@
             </include>
         </group>
         <group unless="$(arg visual_odometry)">
-            <!-- Visual Odometry -->
+            <!-- GPS Odometry -->
             <remap from="localization_gps_imu/fix" to="fix"/>
             <remap from="localization_gps_imu/imu/data" to="imu/data"/>
             <include file="$(find gps_imu_odometry)/launch/localization_gps_imu.launch">
             </include>
+
+            <!-- Local Grid map -->
+            <remap from="scan" to="/scan_from3d"/>
+            <remap from="odom" to="/localization_gps_imu/odometry"/> <!--/gazebo/gazebo_odometry  -->
+            <include file="$(find pointcloud_to_laserscan)/launch/local_cost2d.launch">
+                <arg name="cell_size"   value="$(arg cell_size)"/>
+                <arg name="map_length"  value="$(arg map_length)"/>
+                <arg name="sync_time"   value="$(arg sync_time)"/>
+                <arg name="frame_id"    value="$(arg frame_id)"/>
+                <arg name="vehicle_size" value="$(arg vehicle_size)"/>
+            </include>
+
+            <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 /odom /map 100" />
         </group>
 
-        <!-- Local Grid map -->
-        <remap from="scan" to="/scan_from3d"/>
-        <remap from="odom" to="/localization_gps_imu/odometry"/> <!--/gazebo/gazebo_odometry  -->
-        <include file="$(find pointcloud_to_laserscan)/launch/local_cost2d.launch">
-            <arg name="cell_size"   value="$(arg cell_size)"/>
-            <arg name="map_length"  value="$(arg map_length)"/>
-            <arg name="sync_time"   value="$(arg sync_time)"/>
-            <arg name="frame_id"    value="$(arg frame_id)"/>
+        <!-- Move base DWA planner -->
+        <include file="$(find move_base_navagation)/launch/exploration_demo_custom.launch">
         </include>
-
-        <!-- Path Planning -->
-
 
     </group>
 </launch>

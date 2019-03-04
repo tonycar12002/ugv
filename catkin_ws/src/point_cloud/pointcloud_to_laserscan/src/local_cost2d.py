@@ -21,6 +21,8 @@ class LocalCost2d(object):
         self.cell_size  = rospy.get_param('~cell_size', 0.5) # meter
         self.map_length   = rospy.get_param("~map_length", 35) 
         self.wait_time  = rospy.get_param("~wait_time", 0.1)
+        self.vehicle_size  = rospy.get_param("~vehicle_size", 0.1)
+
         self.cell_length = int(self.map_length/self.cell_size) * 2
         self.frame_id  = rospy.get_param("~frame_id", "odom")
         self.frame_rate = 0.5
@@ -94,8 +96,9 @@ class LocalCost2d(object):
                 continue
 
             cell_num = self.get_cell_number(scan_range, rad, map_data_info)
-            cell_num = map_data_info.width * map_data_info.height - cell_num 
-            data[cell_num] = 100
+            for value in cell_num:
+                value = map_data_info.width * map_data_info.height - value 
+                data[value] = 100
 
         #print("==========================")
         occupancy_grid.data = data
@@ -113,12 +116,20 @@ class LocalCost2d(object):
         scan_x = scan_x + dis_x
         scan_y = scan_y + dis_y
 
-        cell_y = int(scan_x / self.cell_size)
-        
-        cell_x = int(scan_y / self.cell_size)
-        cell_x = map_data_info.width - cell_x
+        scan_list = []
+        cell_list = []
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                scan_list.append( [scan_x+i*self.vehicle_size , scan_y+j*self.vehicle_size ] )
 
-        return int(cell_y * map_data_info.width + cell_x)
+        for scan in scan_list:
+            cell_y = int(scan[0] / self.cell_size)
+            cell_x = int(scan[1] / self.cell_size)
+            cell_x = map_data_info.width - cell_x
+            data = int(cell_y * map_data_info.width + cell_x)
+            cell_list.append(data)
+
+        return cell_list
 
     def onShutdown(self):
         rospy.loginfo("[%s] Shutdown." %(self.node_name))

@@ -145,9 +145,11 @@ class LocailizationGPSImu(object):
             rospy.Time.now(),"/odom","/utm")
 
         rad_2_deg = 180/math.pi
+        '''
         print("X = ", self.pose.position.x, ", Y = ", self.pose.position.y)
         print(", RPY = ", posterior_roll.mean()*rad_2_deg, posterior_pitch.mean()*rad_2_deg, posterior_yaw.mean()*rad_2_deg%360)
         print("========================================================")
+        '''
 
     def measurement(self, measurementx, variance):
         likelihood = norm(loc = measurementx, scale = np.sqrt(variance))

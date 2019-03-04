@@ -21,6 +21,7 @@ class LocalCost2d(object):
         self.cell_size  = rospy.get_param('~cell_size', 0.5) # meter
         self.map_length   = rospy.get_param("~map_length", 35) 
         self.wait_time  = rospy.get_param("~wait_time", 0.1)
+        self.cell_length = int(self.map_length/self.cell_size) * 2
         self.frame_id  = rospy.get_param("~frame_id", "odom")
         self.frame_rate = 0.5
 
@@ -49,20 +50,29 @@ class LocalCost2d(object):
 
         # Map data information
         map_data_info = MapMetaData()
-        map_data_info.resolution = self.cell_size           # [m/cell]
-        cell_length = int(self.map_length/self.cell_size)
-        map_data_info.width = cell_length*2                   # [cells]
-        map_data_info.height = cell_length*2
+        map_data_info.resolution = self.cell_size               # [m/cell]
+        map_data_info.width = self.cell_length                  # [cells]
+        map_data_info.height = self.cell_length
 
-
+        
         q = (self.odom.pose.pose.orientation.x, self.odom.pose.pose.orientation.y, self.odom.pose.pose.orientation.z, self.odom.pose.pose.orientation.w)
         self.vehicle_yaw = tf.transformations.euler_from_quaternion(q)[2]
+        '''
         x_orig = -self.map_length*cos(self.vehicle_yaw) + self.map_length*sin(self.vehicle_yaw)
         y_orig = -self.map_length*sin(self.vehicle_yaw) - self.map_length*cos(self.vehicle_yaw)
         map_data_info.origin.position.x = int( x_orig + self.odom.pose.pose.position.x )
         map_data_info.origin.position.y = int( y_orig + self.odom.pose.pose.position.y )
         map_data_info.origin.position.z = int(self.odom.pose.pose.position.z)
         map_data_info.origin.orientation = self.odom.pose.pose.orientation
+        '''
+
+        map_data_info.origin.position.x    = self.odom.pose.pose.position.x - self.map_length
+        map_data_info.origin.position.y    = self.odom.pose.pose.position.y - self.map_length
+        map_data_info.origin.position.z    = 0
+        map_data_info.origin.orientation.x = 0
+        map_data_info.origin.orientation.y = 0
+        map_data_info.origin.orientation.z = 0
+        map_data_info.origin.orientation.w = 1.0
         occupancy_grid.info = map_data_info 
 
         '''
@@ -74,18 +84,19 @@ class LocalCost2d(object):
 
         # initial cell 
         data = [0] * map_data_info.width * map_data_info.height
-
         # read laser scan to grid map 
         for laser in range(0, len(self.scan.ranges)):
             scan_range = self.scan.ranges[laser]
-            rad = self.scan.angle_min + laser * self.scan.angle_increment + pi/2
+            rad = self.scan.angle_min + laser * self.scan.angle_increment + pi/2  + self.vehicle_yaw 
 
             # remove points out of range 
-            if scan_range is None or scan_range < self.scan.range_min or scan_range > self.scan.range_max or scan_range >  self.map_length-1: # self.map_length-1
+            if scan_range is None or scan_range < self.scan.range_min or scan_range > self.scan.range_max or scan_range > self.map_length - 5: # 
                 continue
 
             cell_num = self.get_cell_number(scan_range, rad, map_data_info)
+            cell_num = map_data_info.width * map_data_info.height - cell_num 
             data[cell_num] = 100
+
         #print("==========================")
         occupancy_grid.data = data
         
@@ -98,18 +109,19 @@ class LocalCost2d(object):
 
         dis_x = self.odom.pose.pose.position.x - map_data_info.origin.position.x
         dis_y = self.odom.pose.pose.position.y - map_data_info.origin.position.y
-        length = sqrt(dis_x*dis_x + dis_y*dis_y)
 
-        scan_x += length * cos(self.vehicle_yaw)
-        scan_y += length * sin(self.vehicle_yaw)
+        scan_x = scan_x + dis_x
+        scan_y = scan_y + dis_y
 
-        cell_x = int(scan_x / self.cell_size)
-        cell_y = int(scan_y / self.cell_size)
+        cell_y = int(scan_x / self.cell_size)
+        
+        cell_x = int(scan_y / self.cell_size)
+        cell_x = map_data_info.width - cell_x
 
-        return cell_y * map_data_info.width + cell_x
+        return int(cell_y * map_data_info.width + cell_x)
 
     def onShutdown(self):
-            rospy.loginfo("[%s] Shutdown." %(self.node_name))
+        rospy.loginfo("[%s] Shutdown." %(self.node_name))
 
 if __name__ == '__main__':
     rospy.init_node("local_cost_map", anonymous = True)

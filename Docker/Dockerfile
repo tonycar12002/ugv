@@ -151,7 +151,8 @@ RUN apt-get update && apt-get install -y --fix-missing \
 
 RUN apt-get update && apt-get install -y --fix-missing \
     ros-kinetic-rtabmap \
-    ros-kinetic-rtabmap-ros
+    ros-kinetic-rtabmap-ros \
+    ros-kinetic-openslam-gmapping
 
 RUN pip install scipy
     

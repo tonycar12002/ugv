@@ -1,6 +1,5 @@
 <launch>    
     <arg name="veh" default="/"/>
-    <param name="use_sim_time" value="true" />
 
 
     <!-- Param -->
@@ -43,7 +42,7 @@
             </include>
 
             <!-- Local Grid map -->
-            <remap from="scan" to="/scan_from3d"/>
+            <remap from="scan" to="/laser_scan"/>
             <remap from="odom" to="/localization_gps_imu/odometry"/> <!--/gazebo/gazebo_odometry  -->
             <include file="$(find pointcloud_to_laserscan)/launch/local_cost2d.launch">
                 <arg name="cell_size"   value="$(arg cell_size)"/>

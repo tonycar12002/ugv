@@ -25,7 +25,7 @@
   <arg name="localization"            default="false"/>
   
   <!-- sim time for convenience, if playing a rosbag -->
-  <arg name="use_sim_time"            default="true"/>
+  <arg name="use_sim_time"            default="false"/>
   <param if="$(arg use_sim_time)" name="use_sim_time" value="true"/>
   
   <!-- Corresponding config files -->

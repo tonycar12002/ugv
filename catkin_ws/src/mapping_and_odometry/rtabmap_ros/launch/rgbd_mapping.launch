@@ -20,13 +20,13 @@
   
   <arg name="frame_id"                default="base_link"/>   <!-- Fixed frame id, you may set "base_link" or "base_footprint" if they are published -->
   <arg name="database_path"           default="~/.ros/rtabmap.db"/>
-  <arg name="rtabmap_args"            default="--delete_db_on_start --Odom/Strategy 1 --Odom/FilteringStrategy 1"/>              <!-- delete_db_on_start, udebug -->
+  <arg name="rtabmap_args"            default="--delete_db_on_start --Odom/Strategy 1 --Odom/FilteringStrategy 1 Odom/Force2D false"/>
   <arg name="launch_prefix"           default=""/>              <!-- for debugging purpose, it fills launch-prefix tag of the nodes -->
   <arg name="approx_sync"             default="true"/>         <!-- if timestamps of the input topics are not synchronized -->
    
-  <arg name="rgb_topic"               default="/camera/rgb/image_raw" />
-  <arg name="depth_registered_topic"  default="/camera/depth/image_raw" />
-  <arg name="camera_info_topic"       default="/camera/rgb/camera_info" />
+  <arg name="rgb_topic"               default="/camera/color/image_rect_color" />
+  <arg name="depth_registered_topic"  default="/camera/depth/image_rect_raw" />
+  <arg name="camera_info_topic"       default="/camera/color/camera_info" />
   <!--arg name="rgb_topic"               default="/X1/rgbd_camera/rgb/image_raw" />
   <arg name="depth_registered_topic"  default="/X1/rgbd_camera/depth/image_raw" />
   <arg name="camera_info_topic"       default="/X1/rgbd_camera/rgb/camera_info" /-->
@@ -34,7 +34,7 @@
   <arg name="compressed"              default="false"/>
    
   <arg name="subscribe_scan"          default="true"/>         <!-- Assuming 2D scan if set, rtabmap will do 3DoF mapping instead of 6DoF -->
-  <arg name="scan_topic"              default="/scan_from3d"/>
+  <arg name="scan_topic"              default="/scan"/>
   
   <arg name="subscribe_scan_cloud"    default="false"/>         <!-- Assuming 3D scan if set -->
   <arg name="scan_cloud_topic"        default="/velodyne_points"/>

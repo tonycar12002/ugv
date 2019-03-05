@@ -32,7 +32,7 @@ elif [ "$docker_name" == "subt_gazebo" ]; then
 				--pid=host \
 				--env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" $docker_target
 else
-	nvidia-docker run --name $docker_name  -it --net=host --privileged -v /dev:/dev \
+	nvidia-docker run --name $docker_name --rm -it --net=host --privileged -v /dev:/dev \
 				-v /etc/localtime:/etc/localtime:ro -v /var/run/docker.sock:/var/run/docker.sock \
 				-v ~/.bashrc:/root/.bashrc \
 				-v /home/$USER/ugv:/root/ugv \

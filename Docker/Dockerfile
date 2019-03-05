@@ -165,3 +165,12 @@ RUN echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula selec
 RUN chmod +x ZED_SDK_Linux_Ubuntu16.run ; ./ZED_SDK_Linux_Ubuntu16.run silent
 
 Run apt-get install -y byobu
+
+# Realsense
+RUN apt-get install -y software-properties-common
+RUN apt-key adv --keyserver keys.gnupg.net --recv-key C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C8B3A55A6F3EFCDE
+RUN add-apt-repository "deb http://realsense-hw-public.s3.amazonaws.com/Debian/apt-repo xenial main" -u
+RUN apt-get install -y librealsense2-dkms
+RUN apt-get install -y librealsense2-utils
+RUN apt-get install -y librealsense2-dev
+RUN apt-get install -y librealsense2-dbg

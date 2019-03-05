@@ -1,0 +1,6 @@
+<launch>
+  <node name="sbg_ellipse" pkg="sbg_driver" type="ellipse" output="screen">
+  	<rosparam command="load" file="$(find sbg_driver)/config/ellipse_N_default.yaml" />
+  </node>
+  <node name="SbgEkfEuler_to_Imu" pkg="sbg_driver" type="SbgEkfEuler_to_Imu.py"/> 
+</launch>

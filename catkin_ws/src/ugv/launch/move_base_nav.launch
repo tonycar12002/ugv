@@ -7,7 +7,7 @@
     <arg name="global_map" default="false"/>
 
     <!-- PointCloud preprocess -->
-    <arg name="preprocessing_factor" default="bamboo_lake"/>
+    <arg name="preprocessing_factor" default="gazebo"/>
     <arg name="z_min" default="-0.7"/>
     
     <!-- Scan to grid maop -->

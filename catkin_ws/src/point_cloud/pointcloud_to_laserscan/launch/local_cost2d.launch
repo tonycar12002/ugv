@@ -7,6 +7,8 @@
     <arg name="sync_time" default="0.5"/>
     <arg name="frame_id" default="odom"/>
     <arg name="vehicle_size" default="0.5"/>
+    <arg name="drift_x" default="0.1"/>
+    <arg name="drift_y" default="0.1"/>
     
     <node pkg="pointcloud_to_laserscan" type="local_cost2d.py" name="local_cost2d"  output="screen" clear_params="true" required="true">
         <param name="cell_size"     type="double"    value="$(arg cell_size)" />
@@ -14,6 +16,8 @@
         <param name="sync_time"     type="double"    value="$(arg sync_time)" />
         <param name="frame_id"      type="string"   value="$(arg frame_id)" />
         <param name="vehicle_size"  type="double"   value="$(arg vehicle_size)" />
+        <param name="drift_x"       type="double"   value="$(arg drift_x)" />
+        <param name="drift_y"       type="double"   value="$(arg drift_y)" />
     </node>
 
 </launch>

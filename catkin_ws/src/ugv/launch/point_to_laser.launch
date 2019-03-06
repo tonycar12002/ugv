@@ -1,0 +1,45 @@
+<launch>
+    <!-- PointCloud preprocess -->
+    <arg name="preprocessing_factor" default="gazebo"/>
+    <arg name="z_min" default="-0.7"/>
+
+    <!-- Scan to grid maop -->
+    <arg name="cell_size" default="0.2"/>
+    <arg name="map_length" default="15"/>
+    <arg name="sync_time" default="0.5"/>
+    <arg name="frame_id" default="map"/>
+    <arg name="vehicle_size" default="0.2"/>
+    <arg name="drift_x" default="-0.345"/> <!-- base_link and velodyne tf -->
+    <arg name="drift_y" default="0.345"/>
+
+    <!-- PointCloud preprocess -->
+    <remap from="/pcl_preprocessing/velodyne_points" to="/velodyne_points"/>
+    <include file="$(find pcl_perception)/launch/pcl_preprocessing.launch">
+        <arg name="preprocessing_factor" value="$(arg preprocessing_factor)"/>
+        <!--arg name="z_min" value="$(arg z_min)"/-->
+    </include>
+
+    <!-- PointCloud to laserscan -->
+    <remap from="cloud_in" to="/pcl_preprocessing/velodyne_points_preprocess"/>
+    <remap from="scan" to="/scan_from3d"/>
+    <include file="$(find pointcloud_to_laserscan)/launch/pointcloud_to_laserscan.launch">
+        <arg name="z_min" value="$(arg z_min)"/>
+    </include>
+
+    <!-- Local Grid map -->
+    <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 /odom /map 100" />
+
+    <remap from="scan" to="/scan_from3d"/> <!--/scan_from3d-->
+    <remap from="odom" to="/odometry/filtered"/> <!--/gazebo/gazebo_odometry  -->
+    <include file="$(find pointcloud_to_laserscan)/launch/local_cost2d.launch">
+        <arg name="cell_size"   value="$(arg cell_size)"/>
+        <arg name="map_length"  value="$(arg map_length)"/>
+        <arg name="sync_time"   value="$(arg sync_time)"/>
+        <arg name="frame_id"    value="$(arg frame_id)"/>
+        <arg name="vehicle_size" value="$(arg vehicle_size)"/>
+        <arg name="drift_x" value="$(arg drift_x)"/>
+        <arg name="drift_y" value="$(arg drift_y)"/>
+
+    </include>
+
+</launch>

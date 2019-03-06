@@ -1,2 +1,0 @@
-- This folder is for WAM-V path planning
-- Please add your own pkg here

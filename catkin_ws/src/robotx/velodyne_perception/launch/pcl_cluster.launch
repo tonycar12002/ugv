@@ -1,9 +1,0 @@
-<launch>    
-    <arg name="visual" default="true"/>
-
-    <!-- PointCloud Cluster -->
-    <node name="pcl_cluster" pkg="velodyne_perception" type="pcl_cluster"  output="screen" clear_params="true" required="true">
-        <param name="visual" value="$(arg visual)"/>
-        <rosparam command="load" file="$(find velodyne_perception)/config/bamboo_lake.yaml"/>
-    </node>
-</launch>

@@ -47,16 +47,16 @@
 
         <!-- PointCloud preprocess -->
         <remap from="/pcl_preprocessing/velodyne_points" to="/velodyne_points"/>
-        <include file="$(find velodyne_perception)/launch/pcl_preprocessing.launch">
+        <include file="$(find pcl_perception)/launch/pcl_preprocessing.launch">
             <arg name="preprocessing_factor" value="$(arg preprocessing_factor)"/>
-            <arg name="z_min" value="$(arg z_min)"/>
+            <!--arg name="z_min" value="$(arg z_min)"/-->
         </include>
  
         <!-- PointCloud to laserscan -->
         <remap from="cloud_in" to="/pcl_preprocessing/velodyne_points_preprocess"/>
         <remap from="scan" to="/scan_from3d"/>
         <include file="$(find pointcloud_to_laserscan)/launch/pointcloud_to_laserscan.launch">
-        <arg name="z_min" value="$(arg z_min)"/>
+            <arg name="z_min" value="$(arg z_min)"/>
         </include>
 
         <!-- GPS Odometry -->
@@ -108,7 +108,7 @@
         <!--include file="$(find move_base_navagation)/launch/gmapping.launch" >
             <arg name="scan_topic" value="$(arg scan_topic)"/>
         </include-->
-        
+
         <!-- Move base DWA planner -->
         <include file="$(find move_base_navagation)/launch/exploration_demo_custom.launch">
         </include>

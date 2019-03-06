@@ -2,15 +2,15 @@
     <arg name="preprocessing_factor" default="gazebo"/>
     <arg name="z_min" default="-0.7"/>
 
-    <node name="pcl_preprocessing" pkg="velodyne_perception" type="pcl_preprocessing"  output="screen" clear_params="true" required="true">
+    <node name="pcl_preprocessing" pkg="pcl_perception" type="pcl_preprocessing"  output="screen" clear_params="true" required="true">
         <param name="z_min" value="$(arg z_min)"/>
         <rosparam>
             range_min : 0.1
-            range_max : 100.0
+            range_max : 30.0
 
             angle_min : -180.0
             angle_max : 180.0
-            z_max : 10.0
+            z_max : 3.0
             y_min : 0.1
             x_min : 0.1
         </rosparam>

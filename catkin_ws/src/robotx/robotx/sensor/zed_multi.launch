@@ -1,4 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-    <include file="$(find zed_wrapper)/launch/zed_multi_cam.launch"></include>        
-</launch>

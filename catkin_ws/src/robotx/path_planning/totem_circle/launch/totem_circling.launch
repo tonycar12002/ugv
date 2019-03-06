@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+
+	<node name="totem_circling" pkg="totem_circle" type="totem_circling.py" output="screen" clear_params="true" required="true">
+	</node>
+</launch>

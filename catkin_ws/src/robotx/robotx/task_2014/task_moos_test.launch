@@ -1,0 +1,28 @@
+<launch> 
+    <!--Arg:
+        visual:               result visualization, such as printing, images, pointcloud
+
+		sim                   whether is simulation
+        wamv_factor           the angular and speed factor of WAM_V
+        moos_folder           the folder name of moos file
+    -->  
+
+    <arg name="visual" default="true"/>
+
+    <!-- moos ros bridge -->
+    <arg name="wamv_factor" default="bamboo_wamv"/>
+    <arg name="sim" default="false"/>
+    <arg name="moos_folder" default="wamv_waypt"/>
+
+    <!-- MOOS ROS Bridge -->
+    <node pkg="moosros" type="Bridge" name="Bridge" 
+        args="$(find moosros)/missions/$(arg moos_folder)/vehicle.xml $(find moosros)/missions/$(arg moos_folder)/wamv_vehicle.moos" 
+        respawn="false" output="screen" />
+
+    <remap from="moos_waypt/obj_list" to="obstacle_map_fixed/obj_list_odom"/>    
+    <include file="$(find moos_bhv)/launch/moos_waypt.launch">
+        <arg name="sim" value="$(arg sim)"/>
+        <arg name="wamv_factor" value="$(arg wamv_factor)"/>
+    </include>          
+
+</launch>

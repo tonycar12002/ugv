@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+	<arg name="classify" default="false"/>
+	<node name="cluster_no_preprocess" pkg="velodyne_perception" type="cluster_no_preprocess" output="screen" clear_params="true" required="true"></node>
+	<node name="object_map" pkg="velodyne_perception" type="object_map.py" output="screen" clear_params="true" required="true">
+		<param name="classify" value="$(arg classify)"/>
+	</node>
+</launch>

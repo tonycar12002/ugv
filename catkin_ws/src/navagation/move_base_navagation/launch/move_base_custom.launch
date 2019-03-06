@@ -29,7 +29,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCL
 
   <arg name="base_global_planner" default="navfn/NavfnROS"/>
   <arg name="base_local_planner" default="dwa_local_planner/DWAPlannerROS"/>
-  <!-- <arg name="base_local_planner" default="base_local_planner/TrajectoryPlannerROS"/> -->
+  <!-- <arg name="base_local_planner" default="base_local_planner/TrajectoryPlannerROS"/> dwa_local_planner/DWAPlannerROS-->
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
 
@@ -43,8 +43,8 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCL
 
     <!-- local costmap, needs size -->
     <rosparam file="$(find move_base_navagation)/config/costmap_local.yaml" command="load" ns="local_costmap" />
-    <param name="local_costmap/width" value="10.0"/>
-    <param name="local_costmap/height" value="10.0"/>
+    <param name="local_costmap/width" value="15.0"/>
+    <param name="local_costmap/height" value="15.0"/>
 
     <!-- static global costmap, static map provides size -->
     <rosparam file="$(find move_base_navagation)/config/costmap_global_static.yaml" command="load" ns="global_costmap" unless="$(arg no_static_map)"/>

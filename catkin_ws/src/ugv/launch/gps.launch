@@ -1,6 +1,10 @@
 <launch>
+
+	<arg name="gps_port" default="/dev/ttyUSB1"/>
+	<arg name="gps_baud" default="4800"/>
+
 	<node pkg="nmea_navsat_driver" type="nmea_serial_driver" name="nmea_serial_driver" output="screen">
-		<param name="~port" value="/dev/ttyUSB1"/>
-		<param name="~baud" value="4800"/>
+		<param name="~port" value="$(arg gps_port)"/>
+		<param name="~baud" value="$(arg gps_baud)"/>
 	</node>
 </launch>

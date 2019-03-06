@@ -173,4 +173,4 @@ RUN add-apt-repository "deb http://realsense-hw-public.s3.amazonaws.com/Debian/a
 RUN apt-get install -y librealsense2-dkms
 RUN apt-get install -y librealsense2-utils
 RUN apt-get install -y librealsense2-dev
-RUN apt-get install -y librealsense2-dbg
+RUN apt-get install -y librealsense2-dbg 

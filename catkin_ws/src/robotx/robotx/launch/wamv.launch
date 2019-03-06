@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+	<arg name="visual" default="true"/>
+	<arg name="preprocessing_factor" default="bamboo_lake"/>
+	<arg name="preprocessing_with_gps" default="false"/>
+	<arg name="classify" default="false"/>
+
+    <!-- GPS IMU -->
+    <arg name="latitude" default="24.7854974"/>
+	<arg name="longitude" default="120.9970078"/>
+	<arg name="yaw_offset" default="0"/>
+
+	<!-- GPS Odometry -->
+	<remap from="localization_gps_imu/fix" to="fix"/>
+	<remap from="localization_gps_imu/imu/data" to="imu/data"/>
+	<include file="$(find gps_imu_odometry)/launch/localization_gps_imu.launch">
+		<arg name="latitude" value="$(arg latitude)"/>
+		<arg name="longitude" value="$(arg longitude)"/>
+		<arg name="yaw_offset" value="$(arg yaw_offset)"/>
+	</include>
+
+	<!-- Velodyne perception -->
+	<remap from="/odometry/filtered" to="/localization_gps_imu/odometry"/>
+	<include file="$(find velodyne_perception)/launch/pcl_map.launch">
+		<arg name="visual" value="$(arg visual)"/>
+		<arg name="preprocessing_factor" value="$(arg preprocessing_factor)"/>
+		<arg name="preprocessing_with_gps" value="$(arg preprocessing_with_gps)"/>
+		<arg name="classify" value="$(arg classify)"/>
+	</include>
+
+</launch>

@@ -39,6 +39,7 @@ class LocailizationGPSImu(object):
         self.lat_orig = rospy.get_param('~latitude', 0.0)
         self.long_orig = rospy.get_param('~longitude', 0.0)
         self.yaw_offset = rospy.get_param("~yaw_offset", 0.0)
+        self.visual = rospy.get_param("~visual", False)
         self.utm_orig = fromLatLong(self.lat_orig, self.long_orig)
 
         # Publisher
@@ -115,8 +116,10 @@ class LocailizationGPSImu(object):
         self.prior_pose.position.y = posterior_y
         self.prior_pose.position.z = posterior_z   
 
-        self.odometry.pose.pose.position.x = posterior_x.mean()
-        self.odometry.pose.pose.position.y = posterior_y.mean()
+        #self.odometry.pose.pose.position.x = posterior_x.mean()
+        #self.odometry.pose.pose.position.y = posterior_y.mean()
+        self.odometry.pose.pose.position.y = -posterior_x.mean()
+        self.odometry.pose.pose.position.x = posterior_y.mean()
         self.odometry.pose.pose.position.z = posterior_z.mean()
         kf_euler = posterior_yaw.mean()
         qu = tf.transformations.quaternion_from_euler(0, 0, kf_euler)
@@ -145,11 +148,12 @@ class LocailizationGPSImu(object):
             rospy.Time.now(),"/odom","/utm")
 
         rad_2_deg = 180/math.pi
-        '''
-        print("X = ", self.pose.position.x, ", Y = ", self.pose.position.y)
-        print(", RPY = ", posterior_roll.mean()*rad_2_deg, posterior_pitch.mean()*rad_2_deg, posterior_yaw.mean()*rad_2_deg%360)
-        print("========================================================")
-        '''
+        
+        if(self.visual):
+            print("X = ", self.odometry.pose.pose.position.x, ", Y = ", self.odometry.pose.pose.position.y)
+            print(", RPY = ", posterior_roll.mean()*rad_2_deg, posterior_pitch.mean()*rad_2_deg, posterior_yaw.mean()*rad_2_deg%360)
+            print("========================================================")
+        
 
     def measurement(self, measurementx, variance):
         likelihood = norm(loc = measurementx, scale = np.sqrt(variance))

@@ -33,9 +33,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
       base_frame: base_link
       map_frame: map
 
-      map_update_interval: 0.5 # Publish new map
+      map_update_interval: 0.3 # Publish new map
 
-      maxUrange: 30 # Should be just less than sensor range
+      maxUrange: 5 # Should be just less than sensor range
       maxRange: 35 # Should be just greater than sensor range
       particles: 100 # Increased from 80
 

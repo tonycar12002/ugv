@@ -1,0 +1,15 @@
+gps_left_up: [24.788960, 121.000267]
+gps_left_down: [24.788510, 120.999970]
+gps_right_up: [24.788500, 121.0008500]
+gps_right_down: [24.788353, 121.000470]
+
+range_min : 0.5 # 5.0  # task5 => 20
+range_max : 40.0 # 40  # task5 => 25
+angle_min : -180.0 # -180  # task5 => 0
+angle_max : 180.0
+z_min : -0.7 # -1.73  # task5 => -1.0
+z_max : 5.0
+y_min : 0.8
+x_min : 0.8
+z_min_near : -1.7 #-1.53 # -1.76  # task5 => -1.0
+z_max_wave : -1.63 #z_min_near+0.15

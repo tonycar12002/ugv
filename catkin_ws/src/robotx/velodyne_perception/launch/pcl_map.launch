@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+    <arg name="visual" default="false"/>
+    <arg name="preprocessing_factor" default="bamboo_lake"/>
+    <arg name="preprocessing_with_gps" default="true"/>
+    <arg name="classify" default="false"/>
+
+    <!-- PointCloud preprocess -->
+    <remap from="pcl_preprocessing/velodyne_points" to="/velodyne_points"/>
+    <include file="$(find velodyne_perception)/launch/pcl_preprocessing_rviz.launch">
+        <arg name="visual" value="$(arg visual)"/>
+        <arg name="preprocessing_factor" value="$(arg preprocessing_factor)"/>
+        <arg name="preprocessing_with_gps" value="$(arg preprocessing_with_gps)"/> 
+    </include>
+
+    <!-- PointCloud Cluster -->
+    <remap from="pcl_cluster/velodyne_points" to="pcl_preprocessing/velodyne_points_preprocess"/>
+    <include file="$(find velodyne_perception)/launch/pcl_cluster.launch">
+        <arg name="visual" value="$(arg visual)"/>
+    </include>  
+
+    <group if="$(arg classify)">
+        <include file="$(find object_classification)/launch/classify_rot.launch"/>
+    </group>
+
+    <node name="object_map" pkg="velodyne_perception" type="object_map.py" output="screen" clear_params="true" required="true">
+        <param name="classify" value="$(arg classify)"/>
+    </node>
+
+    <node name="mapping_tf" pkg="velodyne_perception" type="mapping_tf.py" output="screen" clear_params="true" required="true"></node>
+</launch>

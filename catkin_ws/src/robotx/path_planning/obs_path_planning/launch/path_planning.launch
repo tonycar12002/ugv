@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+	<arg name="x" default="10"/>
+	<arg name="y" default="10"/>
+    <arg name="arrive_dis" default="2"/>
+	<arg name="safe_dis" default="4"/>
+	<node name="path_planning" pkg="obs_path_planning" type="path_planning_final.py" output="screen" clear_params="true" required="true">
+    	<param name="x" value="$(arg x)"/>
+    	<param name="y" value="$(arg y)"/>
+        <param name="arrive_dis" value="$(arg arrive_dis)"/>
+    	<param name="safe_dis" value="$(arg safe_dis)"/>
+    </node>
+    <node name="obs_map" pkg="obs_path_planning" type="obstacle_map.py" output="screen" clear_params="true" required="true">
+    </node>
+    <node name="obs_mapping" pkg="obs_path_planning" type="obs_mapping.py" output="screen" clear_params="true" required="true">
+    </node>
+</launch>

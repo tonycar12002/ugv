@@ -1,0 +1,20 @@
+<launch>    
+    <arg name="veh" default="/"/> 
+    
+    <!-- GPS IMU -->
+    <arg name="latitude" default="24.7854974"/>
+	<arg name="longitude" default="120.9970078"/>
+	<arg name="yaw_offset" default="0"/>
+
+    <group ns="$(arg veh)">
+        <!-- GPS Odometry -->
+        <remap from="localization_gps_imu/fix" to="fix"/>
+        <remap from="localization_gps_imu/imu/data" to="imu/data"/>
+        <include file="$(find gps_imu_odometry)/launch/localization_gps_imu.launch">
+            <arg name="latitude" value="$(arg latitude)"/>
+            <arg name="longitude" value="$(arg longitude)"/>
+            <arg name="yaw_offset" value="$(arg yaw_offset)"/>
+        </include>
+    </group>
+
+</launch>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+	<arg name="safe_dis" default="4"/>
+	<arg name="classify" default="false"/>
+	<include file="$(find robotx)/launch/wamv.launch">
+		<arg name="classify" value="$(arg classify)"/>
+	</include>
+	<include file="$(find obs_path_planning)/launch/path_planning.launch">
+    	<arg name="safe_dis" value="$(arg safe_dis)"/>
+    </include>
+</launch>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+	<arg name="lookahead" default="0.5"/>
+	<node name="pure_pursuit" pkg="obs_path_planning" type="pure_pursuit_node_gazebo.py" output="screen" clear_params="true" required="true">
+    	<param name="lookahead" value="$(arg lookahead)"/>
+    </node>
+</launch>

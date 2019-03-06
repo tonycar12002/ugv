@@ -1,0 +1,18 @@
+<launch>    
+    <arg name="visual" default="false"/>
+    <arg name="target_dis" default="7.0"/>
+    <arg name="target_angle" default="35.0"/>
+    <arg name="sim" default="true"/>
+    <arg name="linear_speed" default="0.3"/>
+    <arg name="angular_speed" default="0.15"/>
+
+    <!-- Move to light buoy -->
+    <node name="move_lightbuoy" pkg="move_light_buoy" type="move_lightbuoy_new.py"  output="screen" clear_params="true" required="true">
+        <param name="visual" value="$(arg visual)"/>
+        <param name="target_dis" value="$(arg target_dis)"/>
+        <param name="target_angle" value="$(arg target_angle)"/>
+        <param name="sim" value="$(arg sim)"/>
+        <param name="linear_speed" value="$(arg linear_speed)"/>
+        <param name="angular_speed" value="$(arg angular_speed)"/>
+    </node>
+</launch>

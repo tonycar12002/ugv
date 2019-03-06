@@ -1,7 +1,0 @@
-<launch>    
-    <arg name="preprocessing_factor" default="gazebo"/>
-
-    <node name="pcl_preprocessing" pkg="velodyne_perception" type="pcl_preprocessing"  output="screen" clear_params="true" required="true">
-        <rosparam command="load" file="$(find velodyne_perception)/config/$(arg preprocessing_factor).yaml"/>
-    </node>
-</launch>

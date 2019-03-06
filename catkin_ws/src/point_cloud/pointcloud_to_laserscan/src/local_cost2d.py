@@ -28,7 +28,7 @@ class LocalCost2d(object):
         self.frame_rate = 0.5
 
         # Publisher
-        self.pub_grid_map = rospy.Publisher("local_map", OccupancyGrid, queue_size=1)
+        self.pub_grid_map = rospy.Publisher("map", OccupancyGrid, queue_size=1)
 
         rospy.Timer(rospy.Duration(self.frame_rate), self.create_local_map)
 

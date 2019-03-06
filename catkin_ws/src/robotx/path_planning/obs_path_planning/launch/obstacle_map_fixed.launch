@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+	<arg name="moos" default="false"/>
+	<!-- Obstacle map with odom-->
+	<node name="obstacle_map_fixed" pkg="obs_path_planning" type="obstacle_map_fixed.py" output="screen" clear_params="true" required="true">
+		<param name="moos" value="$(arg moos)"/>
+	</node>
+</launch>

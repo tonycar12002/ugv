@@ -95,7 +95,7 @@ class LocalCost2d(object):
             rad = self.scan.angle_min + laser * self.scan.angle_increment + self.vehicle_yaw 
 
             # remove points out of range 
-            if scan_range is None or scan_range < self.scan.range_min or scan_range > self.scan.range_max or scan_range > self.map_length - 3: # 
+            if scan_range is None or scan_range < self.scan.range_min or scan_range > self.scan.range_max or scan_range > self.map_length - 1: # 
                 continue
 
             cell_num = self.get_cell_number(scan_range, rad, map_data_info)
@@ -114,8 +114,8 @@ class LocalCost2d(object):
         scan_x = scan_range * cos(rad) 
         scan_y = scan_range * sin(rad) 
 
-        dis_x = self.odom.pose.pose.position.x - map_data_info.origin.position.x + self.drift_x
-        dis_y = self.odom.pose.pose.position.y - map_data_info.origin.position.y + self.drift_y
+        dis_x = self.odom.pose.pose.position.x - map_data_info.origin.position.x + self.drift_x * cos(self.vehicle_yaw ) 
+        dis_y = self.odom.pose.pose.position.y - map_data_info.origin.position.y + self.drift_y * sin(self.vehicle_yaw ) 
 
         scan_x = scan_x + dis_x
         scan_y = scan_y + dis_y
@@ -124,9 +124,9 @@ class LocalCost2d(object):
         cell_list = []
 
         x_min = scan_x-self.vehicle_size
-        x_max = scan_x+self.vehicle_size
+        x_max = scan_x+self.vehicle_size*1.2
         y_min = scan_y-self.vehicle_size
-        y_max = scan_y+self.vehicle_size
+        y_max = scan_y+self.vehicle_size*1.2
 
         scan_list.append([scan_x, scan_y])
         for i in np.arange(x_min, x_max, self.cell_size):

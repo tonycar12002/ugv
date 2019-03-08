@@ -3,8 +3,8 @@
     <arg name="veh" default="/"/> 
 
     <!-- Planning -->
-    <arg name="update_time" default="0.5"/>
-    <arg name="vehicle_size" default="0.5"/>
+    <arg name="update_time" default="1.0"/>
+    <arg name="vehicle_size" default="0.4"/>
 
     <group ns="$(arg veh)">
         <remap from="path_planning/odom" to="/odometry/filtered"/>

@@ -1,15 +1,15 @@
 <launch>
     <arg name="veh" default="/"/> 
     <arg name="sim" default="false"/>
-    <arg name="gps" default="true"/>
-	<arg name="gps_port" default="/dev/sensor_gps"/>
-	<arg name="gps_baud" default="4800"/>
+    <arg name="gps" default="false"/>
+    <arg name="gps_port" default="/dev/sensor_gps"/>
+    <arg name="gps_baud" default="4800"/>
 
     <param name="use_sim_time" value="$(arg sim)"/>
 
 
     <node pkg="tf" type="static_transform_publisher" name="base_camera_broadcaster" args="0 0 0 0 0 0 /base_link /camera_link 100"/>
-    <node pkg="tf" type="static_transform_publisher" name="base_velodyne_broadcaster" args="0 0 0.3 0 0 0 /base_link /velodyne 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="base_velodyne_broadcaster" args="0 0 0.5 0 0 0 /base_link /velodyne 100"/>
     <node pkg="tf" type="static_transform_publisher" name="base_imu_broadcaster" args="0 0 0 0 0 0 /base_link /imu_link 100"/>
     <node pkg="tf" type="static_transform_publisher" name="base_gps_broadcaster" args="0 0 0 0 0 0 /base_link /gps 100"/>
 

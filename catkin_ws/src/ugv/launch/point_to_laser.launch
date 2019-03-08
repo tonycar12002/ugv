@@ -8,7 +8,7 @@
     <arg name="map_length" default="20"/>
     <arg name="sync_time" default="0.5"/>
     <arg name="frame_id" default="map"/>
-    <arg name="vehicle_size" default="0.4"/>
+    <arg name="vehicle_size" default="0.2"/>
     <arg name="drift_x" default="0.345"/> <!-- base_link and velodyne tf -->
     <arg name="drift_y" default="0.345"/>
 
@@ -30,7 +30,7 @@
     <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 /odom /map 100" />
 
     <remap from="scan" to="/scan_from3d"/> <!--/scan_from3d-->
-    <remap from="odom" to="/gazebo/gazebo_odometry"/> <!--/gazebo/gazebo_odometry /odometry/filtered -->
+    <remap from="odom" to="/odometry/filtered"/> <!--/gazebo/gazebo_odometry /odometry/filtered -->
     <include file="$(find pointcloud_to_laserscan)/launch/local_cost2d.launch">
         <arg name="cell_size"   value="$(arg cell_size)"/>
         <arg name="map_length"  value="$(arg map_length)"/>

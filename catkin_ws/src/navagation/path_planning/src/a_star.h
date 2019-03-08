@@ -20,6 +20,7 @@ struct Node
 	float g_cost;
 	float h_cost; 
 	float f_cost;
+    float local_cost = 0;
     bool is_obstalce;
     bool is_closed;
     bool operator<(const Node& rhs) const
@@ -53,7 +54,7 @@ public:
     int** MapToArray(nav_msgs::OccupancyGrid& map);
 
 
-    vector<Node> Planning(nav_msgs::OccupancyGrid&, geometry_msgs::Pose&, geometry_msgs::Pose&);
+    vector<Node> Planning(nav_msgs::OccupancyGrid&, geometry_msgs::Pose&, geometry_msgs::Pose&, double);
     vector<Node> makePath(Node**, Node&);
     
 };
@@ -114,7 +115,7 @@ vector<Node> AStar::makePath(Node** map, Node& dest){
     }
 
 }
-vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& odom, geometry_msgs::Pose& dest){
+vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& odom, geometry_msgs::Pose& dest, double vehicle_size){
     map_width   = map.info.width;
     map_height  = map.info.height;
     map_resolution = map.info.resolution;
@@ -141,8 +142,18 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
             all_map[y][x].x = x;
             all_map[y][x].y = y;
             all_map[y][x].is_closed = false;
-            if (map.data[ y*map_width + x] >= 50)
+            
+            if (map.data[ y*map_width + x] >= 50){
                 all_map[y][x].is_obstalce = true;
+                double range = vehicle_size/map_resolution;
+                for (int i = -range; i <= range; i++) {
+                    for (int j = -range; j <= range; j++) {
+                        int new_x = x + i;
+                        int new_y = y + j;
+                        all_map[new_y][new_x].local_cost += 0.5;
+                    }
+                }
+            }
             else
                 all_map[y][x].is_obstalce = false;
         }
@@ -188,7 +199,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
                     else if(all_map[new_y][new_x].is_closed == false){
                         g_new = node.g_cost + 1.0;
                         h_new = calculateHCost(new_x, new_y, goal);
-                        f_new = g_new + h_new;
+                        f_new = g_new + h_new + all_map[new_y][new_x].local_cost;
 
                         // Check if this path is better than the one already present
                         if (all_map[new_y][new_x].f_cost == FLT_MAX || all_map[new_y][new_x].f_cost > f_new){

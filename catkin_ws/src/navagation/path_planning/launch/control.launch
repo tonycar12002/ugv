@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <node pkg="path_planning" type="control.py" name="control"  output="screen" clear_params="true" required="true">
+    </node>
+
+</launch>

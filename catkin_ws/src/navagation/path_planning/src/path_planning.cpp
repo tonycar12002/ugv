@@ -20,6 +20,7 @@ private:
     string node_name;
     bool receive_goal;
     double update_time;
+    double vehicle_size;
 
     nav_msgs::Odometry odom;
     nav_msgs::OccupancyGrid map;
@@ -50,7 +51,9 @@ PathPlanning::PathPlanning(ros::NodeHandle& n){
     node_name = ros::this_node::getName();
     receive_goal = false;
     update_time = 0.5;
+    vehicle_size = 0.4;
     nh.getParam("update_time", update_time);
+    nh.getParam("vehicle_size", vehicle_size);
 
 	ROS_INFO("[%s] Initializing ", node_name.c_str());
 
@@ -71,7 +74,7 @@ void PathPlanning::Planning(const ros::TimerEvent& event){
     
     cout << "Start planning" << endl; 
     clock_t t_start = clock();
-    vector<Node> path = a_star.Planning(map, odom.pose.pose, goal.pose);
+    vector<Node> path = a_star.Planning(map, odom.pose.pose, goal.pose, vehicle_size);
 
     nav_msgs::Path  global_path;
     global_path.header.frame_id ="odom";

@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="vector_gps" type="vector_gps_node.py" name="vector_gps_node" clear_params="true" required="true" output="screen"/>
+</launch>

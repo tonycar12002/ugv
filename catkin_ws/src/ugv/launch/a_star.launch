@@ -7,7 +7,7 @@
     <arg name="vehicle_size" default="0.4"/>
 
     <group ns="$(arg veh)">
-        <remap from="path_planning/odom" to="/odometry/filtered"/>
+        <remap from="path_planning/odom" to="/husky_velocity_controller/odom"/>
         <remap from="path_planning/goal" to="/move_base_simple/goal"/>
         <remap from="path_planning/map" to="/map"/>
         <include file="$(find path_planning)/launch/path_planning.launch">
@@ -15,7 +15,7 @@
             <arg name="vehicle_size" value="$(arg vehicle_size)"/>
         </include>
 
-        <remap from="odom" to="/odometry/filtered"/>
+        <remap from="odom" to="/husky_velocity_controller/odom"/>
         <include file="$(find path_planning)/launch/control.launch">
         </include>
     </group>

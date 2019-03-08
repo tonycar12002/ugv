@@ -4,14 +4,14 @@ import rospy
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Pose
 import tf
-def cb_states(msg):
-
+def cb_odom(msg):
+    target_pose = msg.pose.pose
     q = (target_pose.orientation.x, target_pose.orientation.y, target_pose.orientation.z, target_pose.orientation.w)
     euler = tf.transformations.euler_from_quaternion(q)
 
 
-    q_after = tf.transformations.quaternion_from_euler(euler[0]-euler_offset[0], euler[1]-euler_offset[1], euler[2]-euler_offset[2])
-
+    #q_after = tf.transformations.quaternion_from_euler(euler[0]-euler_offset[0], euler[1]-euler_offset[1], euler[2]-euler_offset[2])
+    
     target_pose = Pose()
     target_pose.orientation.x = q[0]
     target_pose.orientation.y = q[1]

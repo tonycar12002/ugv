@@ -59,7 +59,7 @@ class Control:
                 i +=1
             else:
                 cmd = Twist()
-                cmd.linear.x = 0.12
+                cmd.linear.x = 0.13
                 cmd.angular.z = yaw/1.7
                 #print(dis, yaw/math.pi*180)
                 #print("x = ", cmd.linear.x, ", z = ", cmd.angular.z)

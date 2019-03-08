@@ -5,7 +5,7 @@
 
     <!-- Scan to grid maop -->
     <arg name="cell_size" default="0.1"/>
-    <arg name="map_length" default="20"/>
+    <arg name="map_length" default="30"/>
     <arg name="sync_time" default="0.5"/>
     <arg name="frame_id" default="map"/>
     <arg name="vehicle_size" default="0.2"/>

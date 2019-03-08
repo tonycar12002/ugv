@@ -20,14 +20,14 @@ struct Node
 	float g_cost;
 	float h_cost; 
 	float f_cost;
-    float local_cost = 0;
+    float local_cost;
     bool is_obstalce;
     bool is_closed;
     bool operator<(const Node& rhs) const
     {
         return f_cost > rhs.f_cost;
     }
-    
+    Node() : local_cost(0){}
 };
 std::ostream& operator << (std::ostream& o, const Node& a){
     o << "x = " << a.x << ", y = " << a.y << ", fcost = " << a.f_cost << endl;
@@ -145,12 +145,17 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
             
             if (map.data[ y*map_width + x] >= 50){
                 all_map[y][x].is_obstalce = true;
-                double range = vehicle_size/map_resolution;
-                for (int i = -range; i <= range; i++) {
-                    for (int j = -range; j <= range; j++) {
-                        int new_x = x + i;
-                        int new_y = y + j;
-                        all_map[new_y][new_x].local_cost += 0.5;
+                int range = vehicle_size/map_resolution;
+                //cout << range << endl;
+                if (range>=1){
+                    for (int i = -range; i <= range; i++) {
+                        for (int j = -range; j <= range; j++) {
+                            int new_x = x + i;
+                            int new_y = y + j;
+                            int tmp = max(abs(i), abs(j));
+                            all_map[new_y][new_x].local_cost += 1 + (range - tmp)/range;
+                            
+                        }
                     }
                 }
             }

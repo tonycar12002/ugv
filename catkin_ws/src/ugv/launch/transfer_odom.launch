@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+    
+
+    <remap from="odom" to="/husky_velocity_controller/odom"/>
+    <node pkg="gazebo_odom" type="transfer_odom.py" name="transfer_odom"  output="screen" clear_params="true" required="true">
+    </node>
+
+</launch>

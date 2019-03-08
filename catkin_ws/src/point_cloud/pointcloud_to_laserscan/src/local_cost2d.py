@@ -134,8 +134,8 @@ class LocalCost2d(object):
                 scan_list.append( [i, j] )
         
         for scan in scan_list:
-            cell_x = int(math.ceil(scan[0] / self.cell_size)) -1
-            cell_y = int(math.ceil(scan[1] / self.cell_size)) -1
+            cell_x = int(math.floor(scan[0] / self.cell_size)) 
+            cell_y = int(math.floor(scan[1] / self.cell_size)) 
             data = cell_y * map_data_info.width + cell_x
             #print(cell_x, scan[0])
             cell_list.append(data)

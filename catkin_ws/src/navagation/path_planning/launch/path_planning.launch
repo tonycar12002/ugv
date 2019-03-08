@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <arg name="update_time" default="0.5"/>
+
+    <node pkg="path_planning" type="path_planning" name="path_planning"  output="screen" clear_params="true" required="true">
+        <param name="update_time"     type="double"    value="$(arg update_time)" />
+    </node>
+
+</launch>

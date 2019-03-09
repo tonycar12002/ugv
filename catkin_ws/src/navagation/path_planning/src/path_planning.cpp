@@ -74,11 +74,21 @@ void PathPlanning::Planning(const ros::TimerEvent& event){
     
     cout << "Start planning" << endl; 
     clock_t t_start = clock();
-    vector<Node> path = a_star.Planning(map, odom.pose.pose, goal.pose, vehicle_size);
-
     nav_msgs::Path  global_path;
     global_path.header.frame_id ="odom";
     global_path.header.stamp = ros::Time::now();
+
+    double tmp_x = odom.pose.pose.position.x - goal.pose.position.x;
+    double tmp_y = odom.pose.pose.position.y - goal.pose.position.y;
+    double dis = sqrt(tmp_x*tmp_x + tmp_y*tmp_y);
+    if (dis <=  1.0){
+        cout << "Arrive Goal" << endl;
+        receive_goal = false;
+        pub_path.publish(global_path);
+        return;
+    }
+
+    vector<Node> path = a_star.Planning(map, odom.pose.pose, goal.pose, vehicle_size);
 
     for (int i = 0 ; i < path.size() ; i++){
         Node tmp = path[i];

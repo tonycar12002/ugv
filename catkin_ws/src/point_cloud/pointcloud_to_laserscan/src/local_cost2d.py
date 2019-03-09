@@ -27,12 +27,12 @@ class LocalCost2d(object):
 
         self.cell_length = int(self.map_length/self.cell_size*2) 
         self.frame_id  = rospy.get_param("~frame_id", "odom")
-        self.frame_rate = 0.5
+        self.frame_period  = rospy.get_param("~frame_period", 0.2)
 
         # Publisher
         self.pub_grid_map = rospy.Publisher("map", OccupancyGrid, queue_size=1)
 
-        rospy.Timer(rospy.Duration(self.frame_rate), self.create_local_map)
+        rospy.Timer(rospy.Duration(self.frame_period), self.create_local_map)
 
         # Subscriber
         sub_odometry = Subscriber("odom", Odometry)

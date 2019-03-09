@@ -46,7 +46,7 @@ class Control:
         return math.sqrt(x*x+y*y), yaw2-yaw1
 
     def send_twist(self, event):
-        if self.path is None or self.path is None:
+        if self.path is None or self.odom is None:
             return 
 
         self.update = False
@@ -59,11 +59,14 @@ class Control:
                 i +=1
             else:
                 cmd = Twist()
-                cmd.linear.x = 0.2
-                cmd.angular.z = yaw/1.7
+                cmd.linear.x = 0.18
+                if yaw >= 0.8:
+                    cmd.angular.z = yaw/2.5
+                else:
+                    cmd.angular.z = yaw/1.5
                 #print(dis, yaw/math.pi*180)
                 #print("x = ", cmd.linear.x, ", z = ", cmd.angular.z)
-                self.pub_twist.publish(cmd)
+                #self.pub_twist.publish(cmd)
 
                 marker = Marker(type=Marker.SPHERE, \
                     id=0, lifetime=rospy.Duration(), \

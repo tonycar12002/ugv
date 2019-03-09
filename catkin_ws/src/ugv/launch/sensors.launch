@@ -23,10 +23,13 @@
 	    <include file="$(find microstrain_3dm_gx5_45)/launch/microstrain_25.launch">
         </include>
 
-        <node if="$(arg gps)" pkg="nmea_navsat_driver" type="nmea_serial_driver" name="nmea_serial_driver" output="screen">
+        <!--node if="$(arg gps)" pkg="nmea_navsat_driver" type="nmea_serial_driver" name="nmea_serial_driver" output="screen">
             <param name="~port" value="$(arg gps_port)"/>
             <param name="~baud" value="$(arg gps_baud)"/>
-        </node>
+        </node-->
+        <group if="$(arg gps)">
+            <include file="$(find vector_gps)/launch/gps.launch"/>
+        </group>
 
     </group>	
 

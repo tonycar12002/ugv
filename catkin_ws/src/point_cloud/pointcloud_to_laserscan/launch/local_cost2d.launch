@@ -9,6 +9,7 @@
     <arg name="vehicle_size" default="0.5"/>
     <arg name="drift_x" default="0.1"/>
     <arg name="drift_y" default="0.1"/>
+    <arg name="frame_period" default="0.2"/>
     
     <node pkg="pointcloud_to_laserscan" type="local_cost2d.py" name="local_cost2d"  output="screen" clear_params="true" required="true">
         <param name="cell_size"     type="double"    value="$(arg cell_size)" />
@@ -18,6 +19,7 @@
         <param name="vehicle_size"  type="double"   value="$(arg vehicle_size)" />
         <param name="drift_x"       type="double"   value="$(arg drift_x)" />
         <param name="drift_y"       type="double"   value="$(arg drift_y)" />
+        <param name="frame_period"       type="double"   value="$(arg frame_period)" />
     </node>
 
 </launch>

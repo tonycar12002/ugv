@@ -1,4 +1,5 @@
 #include <iostream>
+#include<fstream>
 #include <math.h>
 #include <vector>
 #include <map>
@@ -10,6 +11,7 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Pose.h"
 #include "nav_msgs/OccupancyGrid.h"
+
 using namespace std;
 struct Node
 {
@@ -23,9 +25,18 @@ struct Node
     float local_cost;
     bool is_obstalce;
     bool is_closed;
+    float vehicle_range;
     bool operator<(const Node& rhs) const
     {
-        return f_cost > rhs.f_cost;
+        /*
+        double tmp_x, tmp_y, dis;
+        tmp_x = x - rhs.x;
+        tmp_y = y - rhs.y;
+        dis = sqrt(tmp_x*tmp_x + tmp_y*tmp_y);
+        if (dis<=vehicle_range)
+            return local_cost > rhs.local_cost;
+        else*/
+            return f_cost > rhs.f_cost;
     }
     Node() : local_cost(0){}
 };
@@ -56,7 +67,7 @@ public:
 
     vector<Node> Planning(nav_msgs::OccupancyGrid&, geometry_msgs::Pose&, geometry_msgs::Pose&, double);
     vector<Node> makePath(Node**, Node&);
-    
+    void WriteCose(Node **all_map);
 };
 bool AStar::Compare(Node& left, Node& right){
     return left.f_cost < right.f_cost;
@@ -119,6 +130,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
     map_width   = map.info.width;
     map_height  = map.info.height;
     map_resolution = map.info.resolution;
+    int range = vehicle_size/map_resolution;
 
     Node start, goal;
     start.x = int( floor( (odom.position.x -  map.info.origin.position.x) / map.info.resolution)) ;
@@ -142,22 +154,27 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
             all_map[y][x].x = x;
             all_map[y][x].y = y;
             all_map[y][x].is_closed = false;
+            all_map[y][x].vehicle_range = range;
             
-            if (map.data[ y*map_width + x] >= 50){
+            if (map.data[ y*map_width + x] >= 70){
                 all_map[y][x].is_obstalce = true;
-                int range = vehicle_size/map_resolution;
+                
                 //cout << range << endl;
                 if (range>=1){
                     for (int i = -range; i <= range; i++) {
                         for (int j = -range; j <= range; j++) {
                             int new_x = x + i;
                             int new_y = y + j;
+                            if (new_x<0 || new_x >= map_width || new_y<0 || new_y >=map_height)
+                                continue;
+                                
                             int tmp = max(abs(i), abs(j));
                             all_map[new_y][new_x].local_cost += 1 + (range - tmp)/range;
-                            
+
                         }
                     }
                 }
+                
             }
             else
                 all_map[y][x].is_obstalce = false;
@@ -179,7 +196,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
     bool destinationFound = false;
     
 
-    while (!queue.empty() && queue.size()<map_width * map_height) {
+    while (!queue.empty()) { // issue: queue.size()<map_width * map_height why
  
         Node node = queue.top();
         queue.pop();
@@ -187,7 +204,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
         int x = node.x;
         int y = node.y;
         all_map[y][x].is_closed = true;
-
+     
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 double g_new, h_new, f_new;
@@ -199,6 +216,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
                         all_map[new_y][new_x].parent_x = x;
                         all_map[new_y][new_x].parent_y = y;
                         destinationFound = true;
+                        WriteCose(all_map);
                         return makePath(all_map, goal);
                     }
                     else if(all_map[new_y][new_x].is_closed == false){
@@ -207,7 +225,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
                         f_new = g_new + h_new + all_map[new_y][new_x].local_cost;
 
                         // Check if this path is better than the one already present
-                        if (all_map[new_y][new_x].f_cost == FLT_MAX || all_map[new_y][new_x].f_cost > f_new){
+                        if (all_map[new_y][new_x].f_cost == FLT_MAX || all_map[new_y][new_x].g_cost > g_new){
                             // Update the details of this neighbour node
                             all_map[new_y][new_x].f_cost = f_new;
                             all_map[new_y][new_x].g_cost = g_new;
@@ -223,6 +241,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
         }
     }
     if (destinationFound == false) {
+
 		cout << "Destination not found" << endl;
 	}
     return empty;
@@ -249,3 +268,23 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
 
 }
 
+void AStar::WriteCose(Node **all_map){
+    char filename[]="/root/ugv/f_cost.txt";
+    fstream fp;
+    fp.open(filename, ios::out);
+    if(!fp){//如果開啟檔案失敗，fp為0；成功，fp為非0
+        cout<<"Fail to open file: "<<filename<<endl;
+    }
+    for (int x = 0; x < map_width; x++) {
+        for (int y = 0; y < map_height; y++) {  
+            if (all_map[y][x].is_obstalce)
+                fp<<"X"<<" ";
+            else if (round(all_map[y][x].f_cost)>=10000)
+                fp<<" "<<" ";
+            else
+                fp<<round(all_map[y][x].f_cost)<<" ";
+        }
+        fp<<endl;
+    } 
+    fp.close();
+}

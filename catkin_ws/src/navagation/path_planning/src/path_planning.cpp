@@ -13,6 +13,7 @@
 #include "nav_msgs/OccupancyGrid.h"
 #include "geometry_msgs/PoseStamped.h"
 #include "geometry_msgs/Pose.h"
+#include "std_msgs/Bool.h"
 
 using namespace std;
 class PathPlanning{
@@ -28,6 +29,7 @@ private:
 
     ros::NodeHandle nh;
     ros::Publisher  pub_path;
+    ros::Publisher  pub_arrive;
 
     ros::Subscriber sub_map;
     ros::Subscriber sub_goal;
@@ -59,6 +61,7 @@ PathPlanning::PathPlanning(ros::NodeHandle& n){
 
     //Publisher
     pub_path = nh.advertise<nav_msgs::Path>("global_path", 1);
+    pub_arrive = nh.advertise<std_msgs::Bool>("arrive", 1);
 
     timer = nh.createTimer(ros::Duration(0.5), &PathPlanning::Planning, this);
 
@@ -89,9 +92,6 @@ void PathPlanning::Planning(const ros::TimerEvent& event){
     }
 
     vector<Node> path = a_star.Planning(map, odom.pose.pose, goal.pose, vehicle_size);
-    if (path.size() == 0){
-//	receive_goal = false;	
-    }
     for (int i = 0 ; i < path.size() ; i++){
         Node tmp = path[i];
         double x = tmp.x*map.info.resolution+map.info.origin.position.x;

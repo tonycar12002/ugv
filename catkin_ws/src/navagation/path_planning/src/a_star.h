@@ -67,7 +67,7 @@ public:
 
     vector<Node> Planning(nav_msgs::OccupancyGrid&, geometry_msgs::Pose&, geometry_msgs::Pose&, double);
     vector<Node> makePath(Node**, Node&);
-    void WriteCose(Node **all_map);
+    void WriteCost(Node **all_map);
 };
 bool AStar::Compare(Node& left, Node& right){
     return left.f_cost < right.f_cost;
@@ -216,7 +216,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
                         all_map[new_y][new_x].parent_x = x;
                         all_map[new_y][new_x].parent_y = y;
                         destinationFound = true;
-                        //WriteCose(all_map);
+                        //WriteCost(all_map);
                         return makePath(all_map, goal);
                     }
                     else if(all_map[new_y][new_x].is_closed == false){
@@ -241,7 +241,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
         }
     }
     if (destinationFound == false) {
-		WriteCose(all_map);
+		WriteCost(all_map);
 		cout << "Destination not found" << endl;
 	}
     return empty;
@@ -268,7 +268,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
 
 }
 
-void AStar::WriteCose(Node **all_map){
+void AStar::WriteCost(Node **all_map){
     char filename[]="/root/ugv/f_cost.txt";
     fstream fp;
     fp.open(filename, ios::out);

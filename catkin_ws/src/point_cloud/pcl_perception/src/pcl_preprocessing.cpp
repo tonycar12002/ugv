@@ -47,8 +47,10 @@ private:
 	double angle_max;
 	double z_max;
 	double z_min;
-	double y_min;
-	double x_min;
+	double y_min_pos;
+	double y_min_neg;
+	double x_min_pos;
+	double x_min_neg;
 
 	int counts;
 
@@ -75,8 +77,10 @@ PreprocessNode::PreprocessNode(ros::NodeHandle &n){
 	angle_max = 180.0;
 	z_min = -5.0;
 	z_max = 5.0;
-	y_min = 3.5;
-	x_min = 1.5;
+	y_min_neg = -3.5;
+	y_min_pos = 3.5;
+	x_min_neg = -1.5;
+	x_min_pos = 1.5;
 
 	//Read yaml file
 	nh.getParam("range_min", range_min);
@@ -85,17 +89,14 @@ PreprocessNode::PreprocessNode(ros::NodeHandle &n){
 	nh.getParam("angle_max", angle_max);
 	nh.getParam("z_min", z_min);
 	nh.getParam("z_max", z_max);
-	nh.getParam("y_min", y_min);
-	nh.getParam("x_min", x_min);
+	nh.getParam("y_min_neg", y_min_neg);
+	nh.getParam("y_min_pos", y_min_pos);
+	nh.getParam("x_min_neg", x_min_neg);
+	nh.getParam("x_min_pos", x_min_pos);
+	
+	
 
 	ROS_INFO("[%s] Initializing ", node_name.c_str());
-	ROS_INFO("[%s] Param [visual] = %d", node_name.c_str(), visual);
-	ROS_INFO("[%s] Param [preprocessing_with_gps] = %d", node_name.c_str(), preprocessing_with_gps);
-	
-	ROS_INFO("[%s] Param [range_max] = %f, [range_min] = %f", node_name.c_str(), range_max, range_min);
-	ROS_INFO("[%s] Param [angle_max] = %f, [angle_min] = %f", node_name.c_str(), angle_max, angle_min);
-	ROS_INFO("[%s] Param [x_min] = %f, [y_min] = %f", node_name.c_str(), x_min, y_min);
-	ROS_INFO("[%s] Param [z_max] = %f, [z_min] = %f", node_name.c_str(), z_max, z_min);
 
 	// Publisher
 	pub_cloud = nh.advertise< sensor_msgs::PointCloud2 >("velodyne_points_preprocess", 1);
@@ -137,10 +138,12 @@ void PreprocessNode::cbCloud(const sensor_msgs::PointCloud2ConstPtr& cloud_msg){
 		angle = angle * 180 / 3.1415;
 		if (dis >= range_min && dis <= range_max && cloud_tmp->points[i].z >= z_min && z_max >= cloud_tmp->points[i].z) 
 		{
-			if(angle>=angle_min && angle<=angle_max && (abs(cloud_tmp->points[i].y) >= y_min || abs(cloud_tmp->points[i].x) >= x_min) ){
-				if(dis>=0.5 || cloud_tmp->points[i].y >=0.5 || cloud_tmp->points[i].y<=0){
- 				cloud->points.push_back(cloud_tmp->points[i]);
-				num ++;
+			if(angle>=angle_min && angle<=angle_max){
+				if (cloud_tmp->points[i].y <= y_min_pos && cloud_tmp->points[i].y >= y_min_neg && 
+					cloud_tmp->points[i].x <= x_min_pos && cloud_tmp->points[i].x >= x_min_neg){}
+				else{
+					cloud->points.push_back(cloud_tmp->points[i]);
+					num ++;
 				}
 			}
 		

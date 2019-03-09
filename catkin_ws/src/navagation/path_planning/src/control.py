@@ -66,7 +66,7 @@ class Control:
                     cmd.angular.z = yaw/1.5
                 #print(dis, yaw/math.pi*180)
                 #print("x = ", cmd.linear.x, ", z = ", cmd.angular.z)
-                #self.pub_twist.publish(cmd)
+                self.pub_twist.publish(cmd)
 
                 marker = Marker(type=Marker.SPHERE, \
                     id=0, lifetime=rospy.Duration(), \

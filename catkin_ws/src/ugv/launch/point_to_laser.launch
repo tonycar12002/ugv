@@ -8,13 +8,13 @@
     <arg name="map_length" default="30"/>
     <arg name="sync_time" default="0.2"/>
     <arg name="frame_id" default="map"/>
-    <arg name="vehicle_size" default="0.2"/>
-    <arg name="drift_x" default="0.345"/> <!-- base_link and velodyne tf -->
-    <arg name="drift_y" default="0.345"/>  
+    <arg name="vehicle_size" default="0.3"/>
+    <arg name="drift_x" default="0"/> <!-- base_link and velodyne tf -->
+    <arg name="drift_y" default="0"/>  
     <arg name="frame_period" default="0.3"/> 
      
-    <!--  <arg name="odom_topic" default="/husky_velocity_controller/odom"/>   -->
-    <arg name="odom_topic" default="/localization_gps_imu/odometry"/>
+    <arg name="odom_topic" default="/husky_velocity_controller/odom"/>
+    <!--arg name="odom_topic" default="/localization_gps_imu/odometry"/-->
 
 
     <!-- PointCloud preprocess -->

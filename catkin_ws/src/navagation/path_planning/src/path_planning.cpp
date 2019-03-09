@@ -89,7 +89,9 @@ void PathPlanning::Planning(const ros::TimerEvent& event){
     }
 
     vector<Node> path = a_star.Planning(map, odom.pose.pose, goal.pose, vehicle_size);
-
+    if (path.size() == 0){
+//	receive_goal = false;	
+    }
     for (int i = 0 ; i < path.size() ; i++){
         Node tmp = path[i];
         double x = tmp.x*map.info.resolution+map.info.origin.position.x;

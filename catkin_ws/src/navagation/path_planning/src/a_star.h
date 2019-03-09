@@ -216,7 +216,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
                         all_map[new_y][new_x].parent_x = x;
                         all_map[new_y][new_x].parent_y = y;
                         destinationFound = true;
-                        WriteCose(all_map);
+                        //WriteCose(all_map);
                         return makePath(all_map, goal);
                     }
                     else if(all_map[new_y][new_x].is_closed == false){
@@ -241,7 +241,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
         }
     }
     if (destinationFound == false) {
-
+		WriteCose(all_map);
 		cout << "Destination not found" << endl;
 	}
     return empty;

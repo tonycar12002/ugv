@@ -137,9 +137,11 @@ void PreprocessNode::cbCloud(const sensor_msgs::PointCloud2ConstPtr& cloud_msg){
 		angle = angle * 180 / 3.1415;
 		if (dis >= range_min && dis <= range_max && cloud_tmp->points[i].z >= z_min && z_max >= cloud_tmp->points[i].z) 
 		{
-			if(angle>=angle_min && angle<=angle_max && (abs(cloud_tmp->points[i].y) >= y_min or abs(cloud_tmp->points[i].x) >= x_min) ){
-				cloud->points.push_back(cloud_tmp->points[i]);
+			if(angle>=angle_min && angle<=angle_max && (abs(cloud_tmp->points[i].y) >= y_min || abs(cloud_tmp->points[i].x) >= x_min) ){
+				if(dis>=0.5 || cloud_tmp->points[i].y >=0.5 || cloud_tmp->points[i].y<=0){
+ 				cloud->points.push_back(cloud_tmp->points[i]);
 				num ++;
+				}
 			}
 		
 		}

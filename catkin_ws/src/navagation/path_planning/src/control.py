@@ -24,7 +24,7 @@ class Control:
 
         # Publisher
         self.pub_twist = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
-        self.pub_marker = rospy.Publisher("target_point", Marker, queue_size=11)
+        self.pub_marker = rospy.Publisher("target_point", Marker, queue_size=1)
 
         rospy.Timer(rospy.Duration(0.2), self.send_twist)
 
@@ -42,8 +42,13 @@ class Control:
 
 
         yaw2 = math.atan2(y, x)
-
-        return math.sqrt(x*x+y*y), yaw2-yaw1
+        tmp = yaw2 - yaw1
+   
+        if tmp >= math.pi:
+            tmp = math.pi*2 - tmp
+        elif tmp <= -math.pi:
+            tmp = tmp + math.pi*2 
+        return math.sqrt(x*x+y*y), tmp
 
     def send_twist(self, event):
         if self.path is None or self.odom is None:
@@ -60,10 +65,12 @@ class Control:
             else:
                 cmd = Twist()
                 cmd.linear.x = 0.18
-                if yaw >= 0.8:
-                    cmd.angular.z = yaw/2.5
+                if abs(yaw) >= 1.57:
+                    cmd.angular.z = yaw/2
+                    cmd.linear.x = 0.1
                 else:
-                    cmd.angular.z = yaw/1.5
+                    cmd.angular.z = yaw/1.3
+                #cmd.angular.z = yaw 
                 #print(dis, yaw/math.pi*180)
                 #print("x = ", cmd.linear.x, ", z = ", cmd.angular.z)
                 self.pub_twist.publish(cmd)

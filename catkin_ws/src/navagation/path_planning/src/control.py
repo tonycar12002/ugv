@@ -2,7 +2,7 @@
 import rospy
 from nav_msgs.msg import Path, Odometry
 from geometry_msgs.msg import Twist, Pose, Point, Quaternion, Vector3
-from std_msgs.msg import Header, ColorRGBA
+from std_msgs.msg import Header, ColorRGBA, Bool
 import numpy as np
 from time import time
 from message_filters import ApproximateTimeSynchronizer, TimeSynchronizer, Subscriber
@@ -20,6 +20,7 @@ class Control:
         self.path = None
         self.update = False
         self.complete_dis = 0.5
+        self.arrive = False
 
 
         # Publisher
@@ -29,8 +30,9 @@ class Control:
         rospy.Timer(rospy.Duration(0.2), self.send_twist)
 
         # Subscriber
-        self.sub_odometry = rospy.Subscriber("odom", Odometry, self.cb_odom)
-        self.sub_gloal_path = rospy.Subscriber("/path_planning/global_path", Path, self.cb_path)
+        self.sub_odometry = rospy.Subscriber("odom", Odometry, self.cb_odom, queue_size=1)
+        self.sub_gloal_path = rospy.Subscriber("/path_planning/global_path", Path, self.cb_path, queue_size=1)
+        self.sub_arrive = rospy.Publisher("/path_planning/arrive", Bool, self.cb_arrive, queue_size=1)
 
 
     def distance(self, pose1, pose2):
@@ -51,7 +53,7 @@ class Control:
         return math.sqrt(x*x+y*y), tmp
 
     def send_twist(self, event):
-        if self.path is None or self.odom is None:
+        if self.path is None or self.odom is None or self.arrive:
             return 
 
         self.update = False
@@ -73,7 +75,7 @@ class Control:
                 #cmd.angular.z = yaw 
                 #print(dis, yaw/math.pi*180)
                 #print("x = ", cmd.linear.x, ", z = ", cmd.angular.z)
-                self.pub_twist.publish(cmd)
+                #self.pub_twist.publish(cmd)
 
                 marker = Marker(type=Marker.SPHERE, \
                     id=0, lifetime=rospy.Duration(), \
@@ -84,7 +86,8 @@ class Control:
 
                 self.pub_marker.publish(marker)
 
-
+    def cb_arrive(self, msg_arrive):
+        self.arrive = msg_arrive.data
         
     def cb_odom(self, msg_odom):
         self.odom  = msg_odom

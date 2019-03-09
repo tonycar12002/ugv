@@ -123,20 +123,16 @@ class LocalCost2d(object):
         scan_list = []
         cell_list = []
 
-        x_min = scan_x-self.vehicle_size
-        x_max = scan_x+self.vehicle_size*1.2
-        y_min = scan_y-self.vehicle_size
-        y_max = scan_y+self.vehicle_size*1.2
-
-        scan_list.append([scan_x, scan_y])
-        for i in np.arange(x_min, x_max, self.cell_size):
-            for j in np.arange(y_min, y_max, self.cell_size):
-                scan_list.append( [i, j] )
+        cell_vehicle = int(math.floor(self.vehicle_size/self.cell_size))
+        cell_x = int(math.floor(scan_x / self.cell_size)) 
+        cell_y = int(math.floor(scan_y / self.cell_size)) 
+        scan_list.append( [cell_x, cell_y] )
+        for i in range(-cell_vehicle, cell_vehicle):
+            for j in range(-cell_vehicle, cell_vehicle):
+                scan_list.append( [i+cell_x, j+cell_y] )
         
         for scan in scan_list:
-            cell_x = int(math.floor(scan[0] / self.cell_size)) 
-            cell_y = int(math.floor(scan[1] / self.cell_size)) 
-            data = cell_y * map_data_info.width + cell_x
+            data = scan[1] * map_data_info.width + scan[0]
             #print(cell_x, scan[0])
             cell_list.append(data)
 

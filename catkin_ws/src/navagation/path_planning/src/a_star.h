@@ -85,9 +85,9 @@ bool AStar::isValid(int x, int y, Node** map){
         return true;
 }
 double AStar::calculateHCost(int x, int y, Node& dest) {
-    double H = (sqrt((x - dest.x)*(x - dest.x)
-        + (y - dest.y)*(y - dest.y)));
-    return H;
+    double tmp_x = x - dest.x;
+    double tmp_y = y - dest.y;
+    return sqrt(tmp_x*tmp_x + tmp_y*tmp_y);
 }
 vector<Node> AStar::makePath(Node** map, Node& dest){
     try {
@@ -130,7 +130,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
     map_width   = map.info.width;
     map_height  = map.info.height;
     map_resolution = map.info.resolution;
-    int range = vehicle_size/map_resolution;
+    float range = vehicle_size/map_resolution;
 
     Node start, goal;
     start.x = int( floor( (odom.position.x -  map.info.origin.position.x) / map.info.resolution)) ;
@@ -161,6 +161,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
                 
                 //cout << range << endl;
                 if (range>=1){
+              
                     for (int i = -range; i <= range; i++) {
                         for (int j = -range; j <= range; j++) {
                             int new_x = x + i;
@@ -168,8 +169,8 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
                             if (new_x<0 || new_x >= map_width || new_y<0 || new_y >=map_height)
                                 continue;
                                 
-                            int tmp = max(abs(i), abs(j));
-                            all_map[new_y][new_x].local_cost += 1 + (range - tmp)/range;
+                            float tmp = max(abs(i), abs(j));
+                            all_map[new_y][new_x].local_cost = max(all_map[new_y][new_x].local_cost , (range - tmp)*2);
 
                         }
                     }
@@ -216,7 +217,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
                         all_map[new_y][new_x].parent_x = x;
                         all_map[new_y][new_x].parent_y = y;
                         destinationFound = true;
-                        //WriteCost(all_map);
+                        WriteCost(all_map);
                         return makePath(all_map, goal);
                     }
                     else if(all_map[new_y][new_x].is_closed == false){
@@ -282,7 +283,7 @@ void AStar::WriteCost(Node **all_map){
             else if (round(all_map[y][x].f_cost)>=10000)
                 fp<<" "<<" ";
             else
-                fp<<round(all_map[y][x].f_cost)<<" ";
+                fp<<round(all_map[y][x].local_cost)<<" ";
         }
         fp<<endl;
     } 

@@ -7,4 +7,6 @@ catkin_ws/bin/
 catkin_ws/include/
 catkin_ws/lib/
 catkin_ws/share/
-
+*.swp
+*.pyc
+f_cost.txt

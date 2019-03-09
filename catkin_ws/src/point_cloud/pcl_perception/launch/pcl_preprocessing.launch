@@ -8,8 +8,8 @@
             range_min : 0.2
             range_max : 30.0
 
-            angle_min : -170.0
-            angle_max : 170.0
+            angle_min : -175.0
+            angle_max : 175.0
             z_max : 0.8
             y_min_neg : -0.3
             y_min_pos : 0.5

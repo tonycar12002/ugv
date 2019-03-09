@@ -87,7 +87,9 @@ void PathPlanning::Planning(const ros::TimerEvent& event){
     if (dis <=  1.0){
         cout << "Arrive Goal" << endl;
         receive_goal = false;
-        pub_path.publish(global_path);
+        std_msgs::Bool arrive;
+        arrive.data = true;
+        pub_arrive.publish(arrive);
         return;
     }
 
@@ -120,6 +122,9 @@ void PathPlanning::cbMap(const nav_msgs::OccupancyGrid& msg_map){
 void PathPlanning::cbGoal(const geometry_msgs::PoseStamped& msg_goal){
     goal = msg_goal;
     receive_goal = true;
+    std_msgs::Bool arrive;
+    arrive.data = false;
+    pub_arrive.publish(arrive);
 }
 
 int main(int argc, char **argv)

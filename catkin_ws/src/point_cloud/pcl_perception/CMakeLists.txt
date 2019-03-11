@@ -31,3 +31,6 @@ include_directories(
 
 add_executable(pcl_preprocessing src/pcl_preprocessing.cpp)
 target_link_libraries(pcl_preprocessing ${catkin_LIBRARIES})
+
+add_executable(scan_to_localmap src/scan_to_localmap.cpp)
+target_link_libraries(scan_to_localmap ${catkin_LIBRARIES})

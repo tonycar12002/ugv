@@ -31,7 +31,7 @@ using namespace std;
 
 typedef message_filters::sync_policies::ApproximateTime<nav_msgs::Odometry, sensor_msgs::LaserScan> syncPolicy;
 
-class LocalCost2D{
+class LocalMap2D{
 private:
     double cell_size;
     double map_length;
@@ -57,14 +57,14 @@ private:
     message_filters::Synchronizer<syncPolicy> *sync;
 
 public:
-    LocalCost2D(ros::NodeHandle&);
+    LocalMap2D(ros::NodeHandle&);
 
     void cbOdomAndScan(const nav_msgs::OdometryConstPtr&, const sensor_msgs::LaserScanConstPtr&);
     void CreateMap(const ros::TimerEvent&);
     vector<int> GetCellNumber(double scan_range, double rad, nav_msgs::MapMetaData map_data_info);
 };
 
-LocalCost2D::LocalCost2D(ros::NodeHandle& n){
+LocalMap2D::LocalMap2D(ros::NodeHandle& n){
     nh = n;
 
     cell_size = 0.5;
@@ -90,18 +90,18 @@ LocalCost2D::LocalCost2D(ros::NodeHandle& n){
 
     pub_grid_map = nh.advertise<nav_msgs::OccupancyGrid>("/map", 1);
 
-    timer = nh.createTimer(ros::Duration(frame_period), &LocalCost2D::CreateMap, this);
+    timer = nh.createTimer(ros::Duration(frame_period), &LocalMap2D::CreateMap, this);
 
     //Subscriber
     sub_scan.subscribe(nh, "/scan", 1);
     sub_odom.subscribe(nh, "/odom", 1);
 
     sync = new message_filters::Synchronizer<syncPolicy>(syncPolicy(2),  sub_odom, sub_scan);
-    sync->registerCallback(boost::bind(&LocalCost2D::cbOdomAndScan, this, _1, _2));
+    sync->registerCallback(boost::bind(&LocalMap2D::cbOdomAndScan, this, _1, _2));
 
 
 }
-void LocalCost2D::CreateMap(const ros::TimerEvent& event){
+void LocalMap2D::CreateMap(const ros::TimerEvent& event){
     if (!first_data_arrive){
         return;
     }
@@ -154,7 +154,7 @@ void LocalCost2D::CreateMap(const ros::TimerEvent& event){
 
 }
 
-vector<int> LocalCost2D::GetCellNumber(double scan_range, double rad, nav_msgs::MapMetaData map_data_info){
+vector<int> LocalMap2D::GetCellNumber(double scan_range, double rad, nav_msgs::MapMetaData map_data_info){
     double scan_x = scan_range * cos(rad); 
     double scan_y = scan_range * sin(rad); 
 
@@ -180,7 +180,7 @@ vector<int> LocalCost2D::GetCellNumber(double scan_range, double rad, nav_msgs::
     return cell_list;
 }
 
-void LocalCost2D::cbOdomAndScan(const nav_msgs::OdometryConstPtr& msg_odom, const sensor_msgs::LaserScanConstPtr& msg_scan){
+void LocalMap2D::cbOdomAndScan(const nav_msgs::OdometryConstPtr& msg_odom, const sensor_msgs::LaserScanConstPtr& msg_scan){
     odom = *msg_odom;
     scan = *msg_scan;
     first_data_arrive = true;
@@ -188,9 +188,9 @@ void LocalCost2D::cbOdomAndScan(const nav_msgs::OdometryConstPtr& msg_odom, cons
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "LocalCost2D");
+    ros::init(argc, argv, "LocalMap2D");
     ros::NodeHandle nh("~");
-    LocalCost2D lc(nh);
+    LocalMap2D lc(nh);
     
     ros::spin();
     return 0;

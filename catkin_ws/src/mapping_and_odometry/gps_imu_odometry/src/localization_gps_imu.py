@@ -116,10 +116,10 @@ class LocailizationGPSImu(object):
         self.prior_pose.position.y = posterior_y
         self.prior_pose.position.z = posterior_z   
 
-        #self.odometry.pose.pose.position.x = posterior_x.mean()
-        #self.odometry.pose.pose.position.y = posterior_y.mean()
-        self.odometry.pose.pose.position.y = -posterior_x.mean()
-        self.odometry.pose.pose.position.x = posterior_y.mean()
+        self.odometry.pose.pose.position.x = posterior_x.mean()
+        self.odometry.pose.pose.position.y = posterior_y.mean()
+        #self.odometry.pose.pose.position.y = -posterior_x.mean()
+        #self.odometry.pose.pose.position.x = posterior_y.mean()
         self.odometry.pose.pose.position.z = posterior_z.mean()
         kf_euler = posterior_yaw.mean()
         qu = tf.transformations.quaternion_from_euler(0, 0, kf_euler)

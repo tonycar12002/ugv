@@ -20,19 +20,19 @@ class Control:
         self.path = None
         self.update = False
         self.complete_dis = 0.5
-        self.arrive = False
+        self.arrive = True
 
 
         # Publisher
         self.pub_twist = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
-        self.pub_marker = rospy.Publisher("target_point", Marker, queue_size=1)
+        self.pub_marker = rospy.Publisher("track_point", Marker, queue_size=1)
 
         rospy.Timer(rospy.Duration(0.2), self.send_twist)
 
         # Subscriber
         self.sub_odometry = rospy.Subscriber("odom", Odometry, self.cb_odom, queue_size=1)
         self.sub_gloal_path = rospy.Subscriber("/path_planning/global_path", Path, self.cb_path, queue_size=1)
-        self.sub_arrive = rospy.Publisher("/path_planning/arrive", Bool, self.cb_arrive, queue_size=1)
+        self.sub_arrive = rospy.Subscriber("/path_planning/arrive", Bool, self.cb_arrive, queue_size=1)
 
 
     def distance(self, pose1, pose2):
@@ -54,12 +54,16 @@ class Control:
 
     def send_twist(self, event):
         if self.path is None or self.odom is None or self.arrive:
+            cmd = Twist()
+            cmd.linear.x = 0
+            cmd.angular.z = 0
+            self.pub_twist.publish(cmd)
             return 
 
         self.update = False
         vehicle_pose = self.odom.pose.pose
         i = 0
-        while(not self.update and i != len(self.path.poses)):
+        while(not self.update and i != len(self.path.poses) and not self.arrive):
             pose = self.path.poses[i].pose
             dis, yaw = self.distance(vehicle_pose, pose)
             if dis <= self.complete_dis:
@@ -71,11 +75,11 @@ class Control:
                     cmd.angular.z = yaw/2
                     cmd.linear.x = 0.1
                 else:
-                    cmd.angular.z = yaw/1.3
+                    cmd.angular.z = yaw/1.5
                 #cmd.angular.z = yaw 
                 #print(dis, yaw/math.pi*180)
                 #print("x = ", cmd.linear.x, ", z = ", cmd.angular.z)
-                #self.pub_twist.publish(cmd)
+                self.pub_twist.publish(cmd)
 
                 marker = Marker(type=Marker.SPHERE, \
                     id=0, lifetime=rospy.Duration(), \

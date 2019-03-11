@@ -19,13 +19,13 @@ struct Node
 	int x;
 	int parent_x;
 	int parent_y;
-	float g_cost;
-	float h_cost; 
-	float f_cost;
-    float local_cost;
+	double g_cost;
+	double h_cost; 
+	double f_cost;
+    double local_cost;
     bool is_obstalce;
     bool is_closed;
-    float vehicle_range;
+    double vehicle_range;
     bool operator<(const Node& rhs) const
     {
         /*
@@ -65,7 +65,7 @@ public:
     int** MapToArray(nav_msgs::OccupancyGrid& map);
 
 
-    vector<Node> Planning(nav_msgs::OccupancyGrid&, geometry_msgs::Pose&, geometry_msgs::Pose&, double);
+    vector<Node> Planning(nav_msgs::OccupancyGrid&, geometry_msgs::Pose&, geometry_msgs::Pose&, double, double);
     vector<Node> makePath(Node**, Node&);
     void WriteCost(Node **all_map);
 };
@@ -126,11 +126,11 @@ vector<Node> AStar::makePath(Node** map, Node& dest){
     }
 
 }
-vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& odom, geometry_msgs::Pose& dest, double vehicle_size){
+vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& odom, geometry_msgs::Pose& dest, double vehicle_size, double local_cost){
     map_width   = map.info.width;
     map_height  = map.info.height;
     map_resolution = map.info.resolution;
-    float range = vehicle_size/map_resolution;
+    double range = vehicle_size/map_resolution;
 
     Node start, goal;
     start.x = int( floor( (odom.position.x -  map.info.origin.position.x) / map.info.resolution)) ;
@@ -169,8 +169,8 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
                             if (new_x<0 || new_x >= map_width || new_y<0 || new_y >=map_height)
                                 continue;
                                 
-                            float tmp = max(abs(i), abs(j));
-                            all_map[new_y][new_x].local_cost = max(all_map[new_y][new_x].local_cost , (range - tmp)*2);
+                            double tmp = max(abs(i), abs(j));
+                            all_map[new_y][new_x].local_cost = max(all_map[new_y][new_x].local_cost , (range - tmp)*local_cost);
 
                         }
                     }

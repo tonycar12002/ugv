@@ -29,6 +29,8 @@ target_link_libraries(pointcloud_to_laserscan ${catkin_LIBRARIES})
 add_executable(pointcloud_to_laserscan_node src/pointcloud_to_laserscan_node.cpp)
 target_link_libraries(pointcloud_to_laserscan_node pointcloud_to_laserscan ${catkin_LIBRARIES})
 
+add_executable(local_cost2d src/local_cost2d.cpp)
+target_link_libraries(local_cost2d ${catkin_LIBRARIES})
 
 install(TARGETS pointcloud_to_laserscan pointcloud_to_laserscan_node
 	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

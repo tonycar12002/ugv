@@ -13,9 +13,9 @@
     <arg name="drift_y" default="0"/>  
     <arg name="frame_period" default="0.3"/> 
      
-    <arg name="odom_topic" default="/gazebo/gazebo_odometry"/>
+    <!-- arg name="odom_topic" default="/gazebo/gazebo_odometry"/ -->
     <!-- arg name="odom_topic" default="/husky_velocity_controller/odom"/-->
-    <!--arg name="odom_topic" default="/localization_gps_imu/odometry"/-->
+    <arg name="odom_topic" default="/localization_gps_imu/odometry"/>
 
 
     <!-- PointCloud preprocess -->

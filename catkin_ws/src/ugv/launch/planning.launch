@@ -76,7 +76,10 @@
         </include>
 
         <!-- Control -->
-        <remap from="odom" to="$(arg odom_topic)"/>
+        <remap from="control/odom" to="$(arg odom_topic)"/>
+        <remap from="control/global_path" to="path_planning/global_path"/>
+        <remap from="control/arrive" to="path_planning/arrive"/>
+        <remap from="control/map"  to="path_planning/map"/>
         <include file="$(find path_planning)/launch/control.launch">
         </include>
     </group>

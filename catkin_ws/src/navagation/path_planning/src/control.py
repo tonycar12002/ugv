@@ -25,14 +25,14 @@ class Control:
 
         # Publisher
         self.pub_twist = rospy.Publisher("/X1/cmd_vel", Twist, queue_size=1)
-        self.pub_marker = rospy.Publisher("track_point", Marker, queue_size=1)
+        self.pub_marker = rospy.Publisher("~track_point", Marker, queue_size=1)
 
         rospy.Timer(rospy.Duration(0.2), self.send_twist)
 
         # Subscriber
-        self.sub_odometry = rospy.Subscriber("odom", Odometry, self.cb_odom, queue_size=1)
-        self.sub_gloal_path = rospy.Subscriber("/path_planning/global_path", Path, self.cb_path, queue_size=1)
-        self.sub_arrive = rospy.Subscriber("/path_planning/arrive", Bool, self.cb_arrive, queue_size=1)
+        self.sub_odometry = rospy.Subscriber("~odom", Odometry, self.cb_odom, queue_size=1)
+        self.sub_gloal_path = rospy.Subscriber("~global_path", Path, self.cb_path, queue_size=1)
+        self.sub_arrive = rospy.Subscriber("~arrive", Bool, self.cb_arrive, queue_size=1)
 
 
     def distance(self, pose1, pose2):

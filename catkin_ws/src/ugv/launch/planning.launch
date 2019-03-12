@@ -1,14 +1,13 @@
 <launch>
     
-    <arg name="veh" default="/"/> 
+    <arg name="veh" default="X1"/> 
     <arg name="odom_topic" default="gazebo_odom/odometry"/>
     <!-- arg name="odom_topic" default="/husky_velocity_controller/odom"/--> 
     <!-- arg name="odom_topic" default="/localization_gps_imu/odometry"/-->
-    <arg name="lidar3d_topic" default="velodyne_points"/>
+    <arg name="lidar3d_topic" default="points"/>
     <arg name="lidar2d_topic" default="scan_from3d"/>
 
-
-    <arg name="laser_frame_id" default="velodyne"/>
+    <arg name="laser_frame_id" default="X1/front_laser"/>
 
     <!-- PointCloud preprocess -->
     <arg name="z_min" default="-0.3"/>
@@ -27,6 +26,7 @@
     <arg name="update_time" default="0.5"/>
     <arg name="vehicle_size_planning" default="0.4"/>
     <arg name="local_cost" default="2.5"/>
+    <arg name="complete_dis" default="1.0"/>
 
 
     <group ns="$(arg veh)">
@@ -73,9 +73,10 @@
             <arg name="update_time" value="$(arg update_time)"/>
             <arg name="vehicle_size" value="$(arg vehicle_size_planning)"/>
             <arg name="local_cost" value="$(arg local_cost)"/>
+            <arg name="complete_dis" value="$(arg complete_dis)"/>
         </include>
 
-        <!-- Control -->
+        <!-- Control  Need replace by david-->
         <remap from="control/odom" to="$(arg odom_topic)"/>
         <remap from="control/global_path" to="path_planning/global_path"/>
         <remap from="control/arrive" to="path_planning/arrive"/>

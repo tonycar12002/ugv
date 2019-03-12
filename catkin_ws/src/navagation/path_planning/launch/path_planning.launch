@@ -4,11 +4,13 @@
     <arg name="update_time" default="0.5"/>
     <arg name="vehicle_size" default="0.3"/>
     <arg name="local_cost" default="2.0"/>
+    <arg name="complete_dis" default="1.0"/>
 
     <node pkg="path_planning" type="path_planning" name="path_planning"  output="screen" clear_params="true" required="true">
         <param name="update_time"     type="double"    value="$(arg update_time)" />
         <param name="vehicle_size"    type="double"    value="$(arg vehicle_size)"/>
         <param name="local_cost"      type="double"      value="$(arg local_cost)"/>
+        <param name="complete_dis"      type="double"      value="$(arg complete_dis)"/>
     </node>
 
 </launch>

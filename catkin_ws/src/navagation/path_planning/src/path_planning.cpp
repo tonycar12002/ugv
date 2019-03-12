@@ -28,6 +28,7 @@ private:
     double update_time;
     double vehicle_size;
     double local_cost;
+    double complete_dis;
     queue<geometry_msgs::PoseStamped> waypt_list;
     vector<array<double, 2> >pose_array;
 
@@ -67,9 +68,11 @@ PathPlanning::PathPlanning(ros::NodeHandle& n){
     update_time = 0.5;
     vehicle_size = 0.4;
     local_cost = 2.0;
+    complete_dis = 1.0;
     nh.getParam("update_time", update_time);
     nh.getParam("vehicle_size", vehicle_size);
     nh.getParam("local_cost", local_cost);
+    nh.getParam("complete_dis", complete_dis);
 
     ROS_INFO("[%s] Initializing ", node_name.c_str());
 
@@ -110,7 +113,7 @@ void PathPlanning::Planning(const ros::TimerEvent& event){
     double tmp_x = odom.pose.pose.position.x - goal.pose.position.x;
     double tmp_y = odom.pose.pose.position.y - goal.pose.position.y;
     double dis = sqrt(tmp_x*tmp_x + tmp_y*tmp_y);
-    if (dis <=  1.0){
+    if (dis <=  complete_dis){
         cout << "Arrive waypoint" << endl;
         waypt_list.pop();
         return;

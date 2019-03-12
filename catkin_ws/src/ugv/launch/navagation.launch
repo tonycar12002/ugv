@@ -76,12 +76,10 @@
             <arg name="complete_dis" value="$(arg complete_dis)"/>
         </include>
 
-        <!-- Control  Need replace by david-->
-        <remap from="control/odom" to="$(arg odom_topic)"/>
-        <remap from="control/global_path" to="path_planning/global_path"/>
-        <remap from="control/arrive" to="path_planning/arrive"/>
-        <remap from="control/map"  to="path_planning/map"/>
-        <include file="$(find path_planning)/launch/control.launch">
+        <!-- PID Control-->
+        <remap from="odometry/ground_truth" to="$(arg odom_topic)"/>
+        <remap from="planning_path" to="path_planning/global_path"/>
+        <include file="$(find control)/launch/pid_control.launch">
         </include>
     </group>
 </launch>

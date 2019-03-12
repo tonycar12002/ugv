@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="veh" default=""/>
+
+    <node pkg="gazebo_odom" type="gazebo_odom.py" name="gazebo_odom"  output="screen" clear_params="true" required="true">
+        <param name="veh"   type="string"   value="$(arg veh)"/>
+    </node>
+
+</launch>

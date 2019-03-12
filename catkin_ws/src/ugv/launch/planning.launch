@@ -1,25 +1,40 @@
 <launch>
+    
     <arg name="veh" default="/"/> 
     <arg name="odom_topic" default="gazebo_odom/odometry"/>
-    <!-- arg name="odom_topic" default="husky_velocity_controller/odom"/--> 
-    <!-- arg name="odom_topic" default="localization_gps_imu/odometry"/-->
+    <!-- arg name="odom_topic" default="/husky_velocity_controller/odom"/--> 
+    <!-- arg name="odom_topic" default="/localization_gps_imu/odometry"/-->
     <arg name="lidar3d_topic" default="velodyne_points"/>
     <arg name="lidar2d_topic" default="scan_from3d"/>
 
+
+    <arg name="laser_frame_id" default="velodyne"/>
+
     <!-- PointCloud preprocess -->
     <arg name="z_min" default="-0.3"/>
-    <arg name="laser_frame_id" default="velodyne"/>
+    <arg name="z_max" default="1.0"/>
 
     <!-- Scan to grid maop -->
     <arg name="cell_size" default="0.1"/>
     <arg name="map_length" default="30"/>
     <arg name="sync_time" default="0.2"/>
-    <arg name="vehicle_size" default="0.2"/>
+    <arg name="vehicle_size_map" default="0.2"/>
     <arg name="drift_x" default="0"/> <!-- base_link and velodyne tf -->
     <arg name="drift_y" default="0"/>  
     <arg name="frame_period" default="0.2"/> 
 
+    <!-- Planning -->
+    <arg name="update_time" default="0.5"/>
+    <arg name="vehicle_size_planning" default="0.4"/>
+    <arg name="local_cost" default="2.5"/>
+
+
     <group ns="$(arg veh)">
+
+        <include file="$(find gazebo_odom)/launch/gazebo_odom.launch">
+            <arg name="veh" value="$(arg veh)"/> 
+        </include>
+
         <!-- PointCloud preprocess -->
         <remap from="pcl_preprocessing/velodyne_points" to="$(arg lidar3d_topic)"/>
         <include file="$(find pcl_perception)/launch/pcl_preprocessing.launch">
@@ -28,10 +43,10 @@
 
         <!-- PointCloud to laserscan -->
         <remap from="cloud_in" to="pcl_preprocessing/velodyne_points_preprocess"/>
-        <remap from="scan" to="scan_from3d"/>
+        <remap from="scan" to="$(arg lidar2d_topic)"/>
         <include file="$(find pointcloud_to_laserscan)/launch/pointcloud_to_laserscan.launch">
             <arg name="z_min" value="$(arg z_min)"/>
-            <arg name="frame_id" value="$(arg laser_frame_id)"/>
+            <arg name="frame_id"    value="$(arg laser_frame_id)"/>
         </include>
 
         <!-- Local Grid map -->
@@ -44,10 +59,25 @@
             <arg name="cell_size"   value="$(arg cell_size)"/>
             <arg name="map_length"  value="$(arg map_length)"/>
             <arg name="sync_time"   value="$(arg sync_time)"/>
-            <arg name="vehicle_size" value="$(arg vehicle_size)"/>
+            <arg name="vehicle_size" value="$(arg vehicle_size_map)"/>
             <arg name="drift_x" value="$(arg drift_x)"/>
             <arg name="drift_y" value="$(arg drift_y)"/>
             <arg name="frame_period" value="$(arg frame_period)"/>
+        </include>
+
+        <!-- A star planning -->
+        <remap from="path_planning/odom" to="$(arg odom_topic)"/>
+        <remap from="path_planning/goal" to="/move_base_simple/goal"/>
+        <remap from="path_planning/map" to="scan_to_localmap/map"/>
+        <include file="$(find path_planning)/launch/path_planning.launch">
+            <arg name="update_time" value="$(arg update_time)"/>
+            <arg name="vehicle_size" value="$(arg vehicle_size_planning)"/>
+            <arg name="local_cost" value="$(arg local_cost)"/>
+        </include>
+
+        <!-- Control -->
+        <remap from="odom" to="$(arg odom_topic)"/>
+        <include file="$(find path_planning)/launch/control.launch">
         </include>
     </group>
 </launch>

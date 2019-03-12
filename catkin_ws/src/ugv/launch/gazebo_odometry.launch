@@ -1,0 +1,10 @@
+<launch>    
+    <arg name="veh" default="/"/> 
+    
+    <group ns="$(arg veh)">
+        <include file="$(find gazebo_odom)/launch/gazebo_odom.launch">
+            <arg name="veh" value="$(arg veh)"/> 
+        </include>
+    </group>
+
+</launch>

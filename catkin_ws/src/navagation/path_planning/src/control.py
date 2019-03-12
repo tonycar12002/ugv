@@ -24,7 +24,7 @@ class Control:
 
 
         # Publisher
-        self.pub_twist = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
+        self.pub_twist = rospy.Publisher("/X1/cmd_vel", Twist, queue_size=1)
         self.pub_marker = rospy.Publisher("track_point", Marker, queue_size=1)
 
         rospy.Timer(rospy.Duration(0.2), self.send_twist)
@@ -85,7 +85,7 @@ class Control:
                     id=0, lifetime=rospy.Duration(), \
                     pose=Pose(Point(pose.position.x, pose.position.y, 0), Quaternion(0, 0, 0, 1)),\
                     scale=Vector3(0.3, 0.3, 0.3),\
-                    header=Header(frame_id = "odom"),\
+                    header=Header(frame_id = self.odom.header.frame_id),\
                     color=ColorRGBA(0.0, 11.0, 0.0, 1))
 
                 self.pub_marker.publish(marker)

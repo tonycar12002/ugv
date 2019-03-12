@@ -8,7 +8,7 @@ def cb_states(msg):
     target_pose = None
     global first, x, y, euler_offset, br
     for i in range(0, len(msg.name)):
-        if msg.name[i] == "/":
+        if msg.name[i] == veh:
             target_pose = msg.pose[i]
             if first == True:
                 first = False
@@ -29,7 +29,10 @@ def cb_states(msg):
             target_pose.orientation.w = q_after[3]
 
     gazebo_odom = Odometry()
-    gazebo_odom.header.frame_id="/odom"
+    veh_ = veh
+    if len(veh) is not 1:
+        veh_ = veh + "/"
+    gazebo_odom.header.frame_id= veh_ + "odom"
     gazebo_odom.header.stamp = rospy.Time.now()
     gazebo_odom.pose.pose = target_pose
 
@@ -37,7 +40,7 @@ def cb_states(msg):
                          gazebo_odom.pose.pose.position.y, gazebo_odom.pose.pose.position.z), \
                         (gazebo_odom.pose.pose.orientation.x, gazebo_odom.pose.pose.orientation.y, \
                         gazebo_odom.pose.pose.orientation.z, gazebo_odom.pose.pose.orientation.w), \
-                        rospy.Time.now(),"/base_link","/odom")
+                        rospy.Time.now(), veh_ + "base_link", veh_ + "odom")
 
     pub_odometry.publish(gazebo_odom)
 
@@ -48,9 +51,11 @@ if __name__ == "__main__":
     x = 0
     y = 0
     euler_offset = [0, 0, 0]
+    veh = rospy.get_param('~veh', "X1")
+    
     br = tf.TransformBroadcaster()
     rospy.Subscriber("/gazebo/model_states", ModelStates, cb_states, queue_size=1)
 
-    pub_odometry = rospy.Publisher("/gazebo/gazebo_odometry", Odometry, queue_size=1)
+    pub_odometry = rospy.Publisher("~odometry", Odometry, queue_size=1)
 
     rospy.spin()

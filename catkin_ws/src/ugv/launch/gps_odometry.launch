@@ -1,5 +1,5 @@
 <launch>    
-    <arg name="veh" default="/"/> 
+    <arg name="veh" default=""/> 
     
     <!-- GPS IMU -->
     <arg name="latitude" default="24.7854974"/>

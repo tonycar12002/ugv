@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="odom_topic" default="/husky_velocity_controller/odom"/>
+    <arg name="odom_topic" default="husky_velocity_controller/odom"/>
 
     
     <remap from="odom" to="$(arg odom_topic)"/>

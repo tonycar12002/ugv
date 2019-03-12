@@ -73,7 +73,6 @@ LocalMap2D::LocalMap2D(ros::NodeHandle& n){
     vehicle_size = 0.2;
     drift_x = 0.0;
     drift_y = 0.0;
-    frame_id = "/odom";
     frame_period = 0.5;
     first_data_arrive = false;
 
@@ -84,17 +83,16 @@ LocalMap2D::LocalMap2D(ros::NodeHandle& n){
     nh.getParam("drift_x", drift_x);
     nh.getParam("drift_y", drift_y);
     nh.getParam("cell_length", cell_length);
-    nh.getParam("frame_id", frame_id);
     nh.getParam("frame_period", frame_period);
     cell_length = int(map_length/cell_size*2);
 
-    pub_grid_map = nh.advertise<nav_msgs::OccupancyGrid>("/map", 1);
+    pub_grid_map = nh.advertise<nav_msgs::OccupancyGrid>("map", 1);
 
     timer = nh.createTimer(ros::Duration(frame_period), &LocalMap2D::CreateMap, this);
 
     //Subscriber
-    sub_scan.subscribe(nh, "/scan", 1);
-    sub_odom.subscribe(nh, "/odom", 1);
+    sub_scan.subscribe(nh, "scan", 1);
+    sub_odom.subscribe(nh, "odom", 1);
 
     sync = new message_filters::Synchronizer<syncPolicy>(syncPolicy(2),  sub_odom, sub_scan);
     sync->registerCallback(boost::bind(&LocalMap2D::cbOdomAndScan, this, _1, _2));
@@ -108,7 +106,7 @@ void LocalMap2D::CreateMap(const ros::TimerEvent& event){
 
     nav_msgs::OccupancyGrid occupancy_grid;
     occupancy_grid.header.stamp = ros::Time::now();
-    occupancy_grid.header.frame_id = frame_id;
+    occupancy_grid.header.frame_id = odom.header.frame_id;
 
     // Map data information
     nav_msgs::MapMetaData map_data_info;

@@ -39,7 +39,7 @@ private:
     ros::NodeHandle nh;
     ros::Publisher  pub_path;
     ros::Publisher  pub_arrive;
-    ros::Publisher	pub_marker;
+    ros::Publisher  pub_marker;
     ros::Publisher  pub_marker_list;
 
     ros::Subscriber sub_map;
@@ -71,7 +71,7 @@ PathPlanning::PathPlanning(ros::NodeHandle& n){
     nh.getParam("vehicle_size", vehicle_size);
     nh.getParam("local_cost", local_cost);
 
-	ROS_INFO("[%s] Initializing ", node_name.c_str());
+    ROS_INFO("[%s] Initializing ", node_name.c_str());
 
     //Publisher
     pub_path = nh.advertise<nav_msgs::Path>("global_path", 1);
@@ -101,7 +101,7 @@ void PathPlanning::Planning(const ros::TimerEvent& event){
     //cout << "Start planning" << endl; 
     clock_t t_start = clock();
     nav_msgs::Path  global_path;
-    global_path.header.frame_id ="odom";
+    global_path.header.frame_id = map.header.frame_id;
     global_path.header.stamp = ros::Time::now();
 
     geometry_msgs::PoseStamped goal = waypt_list.front();
@@ -123,7 +123,7 @@ void PathPlanning::Planning(const ros::TimerEvent& event){
         double y = tmp.y*map.info.resolution+map.info.origin.position.y;
 
         geometry_msgs::PoseStamped pose;
-        pose.header.frame_id ="odom";
+        pose.header.frame_id =  map.header.frame_id;
         pose.header.stamp = ros::Time::now();
         pose.pose.position.x = x;
         pose.pose.position.y = y;
@@ -139,28 +139,28 @@ void PathPlanning::Planning(const ros::TimerEvent& event){
 void PathPlanning::Visualize(queue<geometry_msgs::PoseStamped> waypoints){
     visualization_msgs::Marker points, points_list;
     points.id = 5;
-	points.type = visualization_msgs::Marker::POINTS;
-	points.action = visualization_msgs::Marker::ADD;
-	points.scale.x = 0.3;
-	points.scale.y = 0.3;
-	points.color.g = 1.0f;
-	points.color.a = 1.0;
-	points.pose.orientation.w = 1.0;
-	points.ns = "points";
-	points.header.stamp = ros::Time::now();
-	points.header.frame_id = "/odom";
+    points.type = visualization_msgs::Marker::POINTS;
+    points.action = visualization_msgs::Marker::ADD;
+    points.scale.x = 0.3;
+    points.scale.y = 0.3;
+    points.color.g = 1.0f;
+    points.color.a = 1.0;
+    points.pose.orientation.w = 1.0;
+    points.ns = "points";
+    points.header.stamp = ros::Time::now();
+    points.header.frame_id = map.header.frame_id;
 
     points_list.id = 4;
-	points_list.type = visualization_msgs::Marker::POINTS;
-	points_list.action = visualization_msgs::Marker::ADD;
-	points_list.scale.x = 0.2;
-	points_list.scale.y = 0.2;
-	points_list.color.b = 1.0f;
-	points_list.color.a = 1.0;
-	points_list.pose.orientation.w = 1.0;
-	points_list.ns = "points_list";
-	points_list.header.stamp = ros::Time::now();
-	points_list.header.frame_id = "/odom";
+    points_list.type = visualization_msgs::Marker::POINTS;
+    points_list.action = visualization_msgs::Marker::ADD;
+    points_list.scale.x = 0.2;
+    points_list.scale.y = 0.2;
+    points_list.color.b = 1.0f;
+    points_list.color.a = 1.0;
+    points_list.pose.orientation.w = 1.0;
+    points_list.ns = "points_list";
+    points_list.header.stamp = ros::Time::now();
+    points_list.header.frame_id = map.header.frame_id;
 
     geometry_msgs::Point p1;
     p1.x = waypoints.front().pose.position.x;
@@ -180,25 +180,25 @@ void PathPlanning::Visualize(queue<geometry_msgs::PoseStamped> waypoints){
     pub_marker_list.publish(points_list);
 }
 bool PathPlanning::ClearWaypt(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res){
-	res.success = 1;
-	res.message = "Clear all waypoints";
-	cout << "Clear all waypoints" << endl;
+    res.success = 1;
+    res.message = "Clear all waypoints";
+    cout << "Clear all waypoints" << endl;
     receive_goal = false;
     queue<geometry_msgs::PoseStamped> empty;
     swap(waypt_list, empty );
-	return true;
+    return true;
 }
 bool PathPlanning::StartWaypt(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res){
-	res.success = 1;
-	res.message = "Start waypoints";
-	cout << "Start waypoints" << endl;
+    res.success = 1;
+    res.message = "Start waypoints";
+    cout << "Start waypoints" << endl;
     receive_goal = true;
 
     std_msgs::Bool arrive;
     arrive.data = false;
     pub_arrive.publish(arrive);
 
-	return true;
+    return true;
 }
 
 void PathPlanning::cbOdom(const nav_msgs::Odometry& msg_odom){

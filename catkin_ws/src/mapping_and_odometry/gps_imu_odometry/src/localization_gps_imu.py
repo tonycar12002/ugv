@@ -46,8 +46,8 @@ class LocailizationGPSImu(object):
         self.pub_odm = rospy.Publisher("~odometry", Odometry, queue_size=1)
 
         # Subscriber
-        sub_imu = message_filters.Subscriber("~imu/data", Imu)
-        sub_gps = message_filters.Subscriber("~fix", NavSatFix)
+        sub_imu = message_filters.Subscriber("imu/data", Imu)
+        sub_gps = message_filters.Subscriber("fix", NavSatFix)
         ats = ApproximateTimeSynchronizer((sub_imu, sub_gps), queue_size = 1, slop = 0.1)
         ats.registerCallback(self.cb_gps_imu)
 

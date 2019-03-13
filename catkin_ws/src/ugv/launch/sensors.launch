@@ -1,5 +1,5 @@
 <launch>
-    <arg name="veh" default=""/> 
+    <arg name="veh" default="/"/> 
     <arg name="sim" default="false"/>
     <arg name="gps" default="false"/>
     <arg name="gps_port" default="/dev/sensor_gps"/>

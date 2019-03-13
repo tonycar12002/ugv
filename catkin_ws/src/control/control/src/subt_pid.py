@@ -37,10 +37,13 @@ class Robot_PID():
 		self.emergency_stop = False
 		self.final_goal = None # The final goal that you want to arrive
 		self.goal = self.final_goal
+		self.arrive = True
 
 		rospy.loginfo("[%s] Initializing " %(self.node_name))
 
 		self.sub_goal = rospy.Subscriber("pursue_point", PoseStamped, self.goal_cb, queue_size=1)
+		self.sub_arrive = rospy.Subscriber("arrive", Bool, self.arrive_cb, queue_size=1)
+
 		rospy.Subscriber('odometry/ground_truth', Odometry, self.odom_cb, queue_size = 1, buff_size = 2**24)
 		self.pub_cmd = rospy.Publisher("/X1/cmd_vel", Twist, queue_size = 1)
 		self.pub_goal = rospy.Publisher("goal_point", Marker, queue_size = 1)
@@ -53,6 +56,9 @@ class Robot_PID():
 		self.ang_srv = Server(ang_PIDConfig, self.ang_pid_cb, "Angular")
 		
 		self.initialize_PID()
+
+	def arrive_cb(self, msg):
+		self.arrive = msg.data
 
 	def odom_cb(self, msg):
 		self.frame_id = msg.header.frame_id
@@ -69,7 +75,7 @@ class Robot_PID():
 		#yaw = yaw + np.pi/2
 		goal_distance = self.get_distance(robot_position, self.goal)
 		goal_angle = self.get_goal_angle(yaw, robot_position, self.goal)
-		if goal_distance < self.arrived_dis or self.emergency_stop:
+		if goal_distance < self.arrived_dis or self.emergency_stop or self.arrive:
 			rospy.loginfo("Stop!!!")
 			pos_output, ang_output = (0, 0)
 		else:

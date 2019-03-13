@@ -79,6 +79,7 @@
         <!-- PID Control-->
         <remap from="odometry/ground_truth" to="$(arg odom_topic)"/>
         <remap from="planning_path" to="path_planning/global_path"/>
+        <remap from="arrive" to="path_planning/arrive"/>
         <include file="$(find control)/launch/pid_control.launch">
         </include>
     </group>

@@ -17,7 +17,7 @@ from cv_bridge import CvBridge, CvBridgeError
 from dynamic_reconfigure.server import Server
 from control.cfg import pos_PIDConfig, ang_PIDConfig
 from std_srvs.srv import SetBool, SetBoolResponse
-
+from std_msgs.msg import Bool
 from PID import PID_control
 
 class Robot_PID():

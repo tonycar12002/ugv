@@ -223,26 +223,26 @@ public:
     
 
     mapOptimization():
-        nh("~")
+        nh("")
     {
     	ISAM2Params parameters;
 		parameters.relinearizeThreshold = 0.01;
 		parameters.relinearizeSkip = 1;
     	isam = new ISAM2(parameters);
 
-        pubKeyPoses = nh.advertise<sensor_msgs::PointCloud2>("/key_pose_origin", 2);
-        pubLaserCloudSurround = nh.advertise<sensor_msgs::PointCloud2>("/laser_cloud_surround", 2);
-        pubOdomAftMapped = nh.advertise<nav_msgs::Odometry> ("/aft_mapped_to_init", 5);
+        pubKeyPoses = nh.advertise<sensor_msgs::PointCloud2>("key_pose_origin/", 2);
+        pubLaserCloudSurround = nh.advertise<sensor_msgs::PointCloud2>("laser_cloud_surround", 2);
+        pubOdomAftMapped = nh.advertise<nav_msgs::Odometry> ("aft_mapped_to_init", 5);
 
-        subLaserCloudCornerLast = nh.subscribe<sensor_msgs::PointCloud2>("/laser_cloud_corner_last", 2, &mapOptimization::laserCloudCornerLastHandler, this);
-        subLaserCloudSurfLast = nh.subscribe<sensor_msgs::PointCloud2>("/laser_cloud_surf_last", 2, &mapOptimization::laserCloudSurfLastHandler, this);
-        subOutlierCloudLast = nh.subscribe<sensor_msgs::PointCloud2>("/outlier_cloud_last", 2, &mapOptimization::laserCloudOutlierLastHandler, this);
-        subLaserOdometry = nh.subscribe<nav_msgs::Odometry>("/laser_odom_to_init", 5, &mapOptimization::laserOdometryHandler, this);
+        subLaserCloudCornerLast = nh.subscribe<sensor_msgs::PointCloud2>("laser_cloud_corner_last", 2, &mapOptimization::laserCloudCornerLastHandler, this);
+        subLaserCloudSurfLast = nh.subscribe<sensor_msgs::PointCloud2>("laser_cloud_surf_last", 2, &mapOptimization::laserCloudSurfLastHandler, this);
+        subOutlierCloudLast = nh.subscribe<sensor_msgs::PointCloud2>("outlier_cloud_last", 2, &mapOptimization::laserCloudOutlierLastHandler, this);
+        subLaserOdometry = nh.subscribe<nav_msgs::Odometry>("laser_odom_to_init", 5, &mapOptimization::laserOdometryHandler, this);
         subImu = nh.subscribe<sensor_msgs::Imu> (imuTopic, 50, &mapOptimization::imuHandler, this);
 
-        pubHistoryKeyFrames = nh.advertise<sensor_msgs::PointCloud2>("/history_cloud", 2);
-        pubIcpKeyFrames = nh.advertise<sensor_msgs::PointCloud2>("/corrected_cloud", 2);
-        pubRecentKeyFrames = nh.advertise<sensor_msgs::PointCloud2>("/recent_cloud", 2);
+        pubHistoryKeyFrames = nh.advertise<sensor_msgs::PointCloud2>("history_cloud", 2);
+        pubIcpKeyFrames = nh.advertise<sensor_msgs::PointCloud2>("corrected_cloud", 2);
+        pubRecentKeyFrames = nh.advertise<sensor_msgs::PointCloud2>("recent_cloud", 2);
 
         downSizeFilterCorner.setLeafSize(0.2, 0.2, 0.2);
         downSizeFilterSurf.setLeafSize(0.4, 0.4, 0.4);
@@ -672,7 +672,7 @@ public:
         aftMappedTrans.stamp_ = ros::Time().fromSec(timeLaserOdometry);
         aftMappedTrans.setRotation(tf::Quaternion(-geoQuat.y, -geoQuat.z, geoQuat.x, geoQuat.w));
         aftMappedTrans.setOrigin(tf::Vector3(transformAftMapped[3], transformAftMapped[4], transformAftMapped[5]));
-        tfBroadcaster.sendTransform(aftMappedTrans);
+        //tfBroadcaster.sendTransform(aftMappedTrans);
     }
 
     void publishKeyPosesAndFrames(){

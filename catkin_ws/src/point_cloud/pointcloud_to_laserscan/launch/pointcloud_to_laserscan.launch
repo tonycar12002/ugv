@@ -9,7 +9,7 @@
         <param name="target_frame" value="$(arg frame_id)"/>
         <rosparam>
             transform_tolerance: 0.01
-            max_height: 3.0
+            max_height: 1.0
 
             angle_min: -3.14 # -M_PI/2
             angle_max: 3.14 # M_PI/2

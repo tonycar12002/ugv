@@ -65,9 +65,9 @@ public:
 
     TransformFusion(){
 
-        pubLaserOdometry2 = nh.advertise<nav_msgs::Odometry> ("/integrated_to_init", 5);
-        subLaserOdometry = nh.subscribe<nav_msgs::Odometry>("/laser_odom_to_init", 5, &TransformFusion::laserOdometryHandler, this);
-        subOdomAftMapped = nh.subscribe<nav_msgs::Odometry>("/aft_mapped_to_init", 5, &TransformFusion::odomAftMappedHandler, this);
+        pubLaserOdometry2 = nh.advertise<nav_msgs::Odometry> ("integrated_to_init", 5);
+        subLaserOdometry = nh.subscribe<nav_msgs::Odometry>("laser_odom_to_init", 5, &TransformFusion::laserOdometryHandler, this);
+        subOdomAftMapped = nh.subscribe<nav_msgs::Odometry>("aft_mapped_to_init", 5, &TransformFusion::odomAftMappedHandler, this);
 
         laserOdometry2.header.frame_id = "/camera_init";
         laserOdometry2.child_frame_id = "/camera";
@@ -207,12 +207,21 @@ public:
         laserOdometry2.pose.pose.position.x = transformMapped[3];
         laserOdometry2.pose.pose.position.y = transformMapped[4];
         laserOdometry2.pose.pose.position.z = transformMapped[5];
-        pubLaserOdometry2.publish(laserOdometry2);
+
+        nav_msgs::Odometry laserOdometry_trans(laserOdometry2);
+        geometry_msgs::Quaternion geoQuatTrans = laserOdometry->pose.pose.orientation;
+        geoQuatTrans = tf::createQuaternionMsgFromRollPitchYaw
+                  (transformMapped[2], -transformMapped[0], -transformMapped[1]+M_PI/2);
+        laserOdometry_trans.pose.pose.orientation.x = -geoQuatTrans.y;
+        laserOdometry_trans.pose.pose.orientation.y = -geoQuatTrans.z;
+        laserOdometry_trans.pose.pose.orientation.z = geoQuatTrans.x;
+        laserOdometry_trans.pose.pose.orientation.w = geoQuatTrans.w;
+        pubLaserOdometry2.publish(laserOdometry_trans);
 
         laserOdometryTrans2.stamp_ = laserOdometry->header.stamp;
         laserOdometryTrans2.setRotation(tf::Quaternion(-geoQuat.y, -geoQuat.z, geoQuat.x, geoQuat.w));
         laserOdometryTrans2.setOrigin(tf::Vector3(transformMapped[3], transformMapped[4], transformMapped[5]));
-        tfBroadcaster2.sendTransform(laserOdometryTrans2);
+        //tfBroadcaster2.sendTransform(laserOdometryTrans2);
     }
 
     void odomAftMappedHandler(const nav_msgs::Odometry::ConstPtr& odomAftMapped)

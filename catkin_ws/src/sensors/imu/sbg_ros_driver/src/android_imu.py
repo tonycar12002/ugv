@@ -3,7 +3,7 @@ import math
 import rospy
 import tf
 from sensor_msgs.msg import Imu
-host = '192.168.0.113'
+host = '192.168.0.101'
 port = 5555
 pub = rospy.Publisher('/imu/data', Imu, queue_size = 1)
 rospy.init_node('Android_IMU', anonymous=True)

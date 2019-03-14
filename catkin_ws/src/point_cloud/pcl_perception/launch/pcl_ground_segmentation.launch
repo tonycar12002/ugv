@@ -1,0 +1,4 @@
+<launch>    
+    <node name="pcl_ground_segmentation" pkg="pcl_perception" type="pcl_ground_segmentation"  output="screen" clear_params="true" required="true">
+    </node>
+</launch>

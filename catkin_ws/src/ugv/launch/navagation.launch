@@ -10,7 +10,7 @@
     <arg name="laser_frame_id" default="X1/front_laser"/>
 
     <!-- PointCloud preprocess -->
-    <arg name="z_min" default="-0.3"/>
+    <arg name="z_min" default="-0.5"/>
     <arg name="z_max" default="1.0"/>
 
     <!-- Scan to grid maop -->
@@ -35,8 +35,13 @@
             <arg name="veh" value="$(arg veh)"/> 
         </include>
 
+        <!-- Remove ground -->
+        <remap from="pcl_ground_segmentation/velodyne_points" to="$(arg lidar3d_topic)"/>
+        <include file="$(find pcl_perception)/launch/pcl_ground_segmentation.launch">
+        </include>
+
         <!-- PointCloud preprocess -->
-        <remap from="pcl_preprocessing/velodyne_points" to="$(arg lidar3d_topic)"/>
+        <remap from="pcl_preprocessing/velodyne_points" to="pcl_ground_segmentation/cloud_remove_ground"/>
         <include file="$(find pcl_perception)/launch/pcl_preprocessing.launch">
             <arg name="z_min" value="$(arg z_min)"/>
         </include>

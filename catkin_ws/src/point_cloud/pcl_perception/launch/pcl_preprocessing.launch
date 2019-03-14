@@ -1,5 +1,6 @@
 <launch>    
-    <arg name="z_min" default="-0.3"/>
+    <arg name="z_min" default="-0.5"/>
+
 
     <node name="pcl_preprocessing" pkg="pcl_perception" type="pcl_preprocessing"  output="screen" clear_params="true" required="true">
         <param name="z_min" value="$(arg z_min)"/>
@@ -9,10 +10,10 @@
 
             angle_min : -180.0
             angle_max : 180.0
-            z_max : 0.8
+            z_max : 1.0
             y_min_neg : -0.3
             y_min_pos : 0.5
-            x_min_neg : -0.2
+            x_min_neg : -0.7
             x_min_pos : 0.4
         </rosparam>
     </node>

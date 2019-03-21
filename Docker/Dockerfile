@@ -157,13 +157,6 @@ RUN apt-get update && apt-get install -y --fix-missing \
 
 RUN pip install scipy
     
-# Setup the ZED SDK
-RUN apt-get update --fix-missing
-RUN apt-get install lsb-release wget less udev sudo apt-transport-https apt-utils -y
-RUN wget -O ZED_SDK_Linux_Ubuntu16.run https://download.stereolabs.com/zedsdk/2.4/ubuntu_cuda9 
-RUN echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
-RUN chmod +x ZED_SDK_Linux_Ubuntu16.run ; ./ZED_SDK_Linux_Ubuntu16.run silent
-
 Run apt-get install -y byobu
 
 # Realsense
@@ -174,3 +167,10 @@ RUN apt-get install -y librealsense2-dkms
 RUN apt-get install -y librealsense2-utils
 RUN apt-get install -y librealsense2-dev
 RUN apt-get install -y librealsense2-dbg 
+
+# Setup the ZED SDK
+RUN apt-get update --fix-missing
+RUN apt-get install lsb-release wget less udev sudo apt-transport-https apt-utils -y
+RUN wget -O ZED_SDK_Linux_Ubuntu16.run https://download.stereolabs.com/zedsdk/2.7/ubuntu16_cuda9 
+RUN echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+RUN chmod +x ZED_SDK_Linux_Ubuntu16.run ; ./ZED_SDK_Linux_Ubuntu16.run silent

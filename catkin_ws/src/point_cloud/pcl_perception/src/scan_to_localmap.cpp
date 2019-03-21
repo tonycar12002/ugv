@@ -113,7 +113,6 @@ void LocalMap2D::CreateMap(const ros::TimerEvent& event){
     map_data_info.resolution = cell_size;               // [m/cell]
     map_data_info.width = cell_length;                  // [cells]
     map_data_info.height = cell_length;
-
     map_data_info.origin.position.x    = odom.pose.pose.position.x - map_length;
     map_data_info.origin.position.y    = odom.pose.pose.position.y - map_length;
     map_data_info.origin.position.z    = 0;
@@ -144,7 +143,7 @@ void LocalMap2D::CreateMap(const ros::TimerEvent& event){
         vector<int>cell_num;
         cell_num = GetCellNumber(scan_range, rad, map_data_info);
         for (int i = 0; i < cell_num.size() ; ++i)
-            data[cell_num[i]] = 100;
+            data[cell_num[i]] = 100; // obstacles 
     }
 
     occupancy_grid.data = data;;
@@ -153,6 +152,11 @@ void LocalMap2D::CreateMap(const ros::TimerEvent& event){
 }
 
 vector<int> LocalMap2D::GetCellNumber(double scan_range, double rad, nav_msgs::MapMetaData map_data_info){
+    /*
+    ***************************************************************
+        Laser scan to grid map position
+    ***************************************************************
+    */
     double scan_x = scan_range * cos(rad); 
     double scan_y = scan_range * sin(rad); 
 

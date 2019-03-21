@@ -29,9 +29,13 @@ Publish:
 #include <pcl/io/pcd_io.h>
 #include <pcl_ros/point_cloud.h>
 #include <pcl/point_types.h>
+#include <pcl_ros/transforms.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/common/transforms.h>
-
+#include <tf/transform_broadcaster.h>
+#include <tf/transform_datatypes.h>
+#include <tf/transform_listener.h>
+#include <tf/transform_datatypes.h>
 
 using namespace std;
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudXYZ;
@@ -120,6 +124,9 @@ void PreprocessNode::cbCloud(const sensor_msgs::PointCloud2ConstPtr& cloud_msg){
 	PointCloudXYZ::Ptr cloud_odom(new PointCloudXYZ);
 	
 	pcl::fromROSMsg(*cloud_msg, *cloud_tmp);
+
+	//tf::Transform transform(tf::Quaternion(0, 0, 0.707, 0.707), tf::Vector3(0, 0, 0));
+	//pcl_ros::transformPointCloud(*cloud_tmp, *cloud_tmp, transform);
 
 	/*
 	***************************************************************

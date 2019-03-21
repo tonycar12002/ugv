@@ -1,13 +1,13 @@
 <launch>
     
     <arg name="veh" default="/"/> 
-    <arg name="odom_topic" default="gazebo_odom/odometry"/>
+    <!-- arg name="odom_topic" default="loam/loam_odom"/-->
     <!-- arg name="odom_topic" default="/husky_velocity_controller/odom"/--> 
-    <!-- arg name="odom_topic" default="/localization_gps_imu/odometry"/-->
-    <arg name="lidar3d_topic" default="points"/>
+    <arg name="odom_topic" default="/gazebo_odom/odometry"/>
+    <arg name="lidar3d_topic" default="velodyne_points"/>
     <arg name="lidar2d_topic" default="scan_from3d"/>
 
-    <arg name="laser_frame_id" default="X1/front_laser"/>
+    <arg name="laser_frame_id" default="velodyne"/> <!-- X1/front_laser -->
 
     <!-- PointCloud preprocess -->
     <arg name="z_min_lidar" default="-5"/>
@@ -17,23 +17,19 @@
     <arg name="cell_size" default="0.1"/>
     <arg name="map_length" default="30"/>
     <arg name="sync_time" default="0.2"/>
-    <arg name="vehicle_size_map" default="0.2"/>
+    <arg name="vehicle_size_map" default="0.35"/>
     <arg name="drift_x" default="0"/> <!-- base_link and velodyne tf -->
     <arg name="drift_y" default="0"/>  
     <arg name="frame_period" default="0.2"/> 
 
     <!-- Planning -->
     <arg name="update_time" default="0.5"/>
-    <arg name="vehicle_size_planning" default="0.4"/>
-    <arg name="local_cost" default="2.5"/>
+    <arg name="vehicle_size_planning" default="0.8"/>
+    <arg name="local_cost" default="3"/>
     <arg name="complete_dis" default="1.0"/>
 
 
     <group ns="$(arg veh)">
-
-        <include file="$(find gazebo_odom)/launch/gazebo_odom.launch">
-            <arg name="veh" value="$(arg veh)"/> 
-        </include>
 
         <!-- PointCloud preprocess -->
         <remap from="pcl_preprocessing/velodyne_points" to="$(arg lidar3d_topic)"/>
@@ -84,6 +80,7 @@
         <!-- PID Control-->
         <remap from="odometry/ground_truth" to="$(arg odom_topic)"/>
         <remap from="planning_path" to="path_planning/global_path"/>
+        <remap from="subt_pid/cmd_vel" to="/cmd_vel"/>
         <remap from="arrive" to="path_planning/arrive"/>
         <include file="$(find control)/launch/pid_control.launch">
         </include>

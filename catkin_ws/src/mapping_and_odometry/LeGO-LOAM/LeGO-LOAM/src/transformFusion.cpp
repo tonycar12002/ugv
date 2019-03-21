@@ -208,15 +208,16 @@ public:
         laserOdometry2.pose.pose.position.y = transformMapped[4];
         laserOdometry2.pose.pose.position.z = transformMapped[5];
 
+        /*
         nav_msgs::Odometry laserOdometry_trans(laserOdometry2);
         geometry_msgs::Quaternion geoQuatTrans = laserOdometry->pose.pose.orientation;
         geoQuatTrans = tf::createQuaternionMsgFromRollPitchYaw
-                  (transformMapped[2], -transformMapped[0], -transformMapped[1]+M_PI/2);
+                  (transformMapped[2], -transformMapped[0], -transformMapped[1]); //+M_PI/2
         laserOdometry_trans.pose.pose.orientation.x = -geoQuatTrans.y;
         laserOdometry_trans.pose.pose.orientation.y = -geoQuatTrans.z;
         laserOdometry_trans.pose.pose.orientation.z = geoQuatTrans.x;
-        laserOdometry_trans.pose.pose.orientation.w = geoQuatTrans.w;
-        pubLaserOdometry2.publish(laserOdometry_trans);
+        laserOdometry_trans.pose.pose.orientation.w = geoQuatTrans.w;*/
+        pubLaserOdometry2.publish(laserOdometry2);
 
         laserOdometryTrans2.stamp_ = laserOdometry->header.stamp;
         laserOdometryTrans2.setRotation(tf::Quaternion(-geoQuat.y, -geoQuat.z, geoQuat.x, geoQuat.w));

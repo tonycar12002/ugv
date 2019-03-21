@@ -18,16 +18,23 @@ def cb_odom(msg):
     target_pose.orientation.z = q[2]
     target_pose.orientation.w = q[3]
 
+    veh_ = veh
+    if len(veh) is not 1:
+        veh_ = veh + "/"
+
     br.sendTransform((msg.pose.pose.position.x, \
                          msg.pose.pose.position.y, msg.pose.pose.position.z), \
                         (target_pose.orientation.x, target_pose.orientation.y, \
                         target_pose.orientation.z, target_pose.orientation.w), \
-                        rospy.Time.now(),"/base_link","/odom")
+                        rospy.Time.now(), veh_ + "base_link", veh_ + "odom")
 
 if __name__ == "__main__":
     rospy.init_node("transfer_odom",anonymous=False)
 
     br = tf.TransformBroadcaster()
+
+    veh = rospy.get_param('~veh', "/")
+
     rospy.Subscriber("odom", Odometry, cb_odom, queue_size=1)
 
     rospy.spin()

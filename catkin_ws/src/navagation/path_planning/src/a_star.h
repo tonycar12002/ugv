@@ -145,6 +145,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
     for(int i = 0; i < map_width; ++i)
         all_map[i] = new Node[map_height];
 
+    // Initial every node
     for (int x = 0; x < map_width; x++) {
         for (int y = 0; y < map_height; y++) {
             all_map[y][x].f_cost = FLT_MAX;
@@ -196,10 +197,10 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
     queue.push(all_map[start.y][start.x]); //priority queue
     bool destinationFound = false;
     
-
+    // Start planning
     while (!queue.empty()) { // issue: queue.size()<map_width * map_height why
  
-        Node node = queue.top();
+        Node node = queue.top(); //find the min fcost node
         queue.pop();
 
         int x = node.x;
@@ -211,19 +212,19 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
                 double g_new, h_new, f_new;
                 int new_x = x+i;
                 int new_y = y+j;
-                if( isValid(new_x, new_y, all_map)){
+                if( isValid(new_x, new_y, all_map)){ //check is obstacle and boundary
                     if (isDestination(new_x, new_y, goal)){
                         //Destination found - make path
                         all_map[new_y][new_x].parent_x = x;
                         all_map[new_y][new_x].parent_y = y;
                         destinationFound = true;
-                        WriteCost(all_map);
-                        return makePath(all_map, goal);
+                        //WriteCost(all_map);
+                        return makePath(all_map, goal); //arrive target => find path
                     }
                     else if(all_map[new_y][new_x].is_closed == false){
                         g_new = node.g_cost + 1.0;
                         h_new = calculateHCost(new_x, new_y, goal);
-                        f_new = g_new + h_new + all_map[new_y][new_x].local_cost;
+                        f_new = g_new + h_new + all_map[new_y][new_x].local_cost; //local cost for vehicle size
 
                         // Check if this path is better than the one already present
                         if (all_map[new_y][new_x].f_cost == FLT_MAX || all_map[new_y][new_x].g_cost > g_new){
@@ -242,7 +243,7 @@ vector<Node> AStar::Planning(nav_msgs::OccupancyGrid& map, geometry_msgs::Pose& 
         }
     }
     if (destinationFound == false) {
-		WriteCost(all_map);
+		//WriteCost(all_map);
 		cout << "Destination not found" << endl;
 	}
     return empty;

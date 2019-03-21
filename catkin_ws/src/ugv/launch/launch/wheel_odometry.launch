@@ -2,7 +2,6 @@
 <launch>
     <arg name="odom_topic" default="husky_velocity_controller/odom"/>
 
-    
     <remap from="odom" to="$(arg odom_topic)"/>
     <node pkg="gazebo_odom" type="transfer_odom.py" name="transfer_odom"  output="screen" clear_params="true" required="true">
     </node>

@@ -25,7 +25,9 @@
 
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_datatypes.h>
- 
+#include <tf/transform_listener.h>
+#include <tf/transform_datatypes.h>
+
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -72,7 +74,7 @@ extern const double mappingProcessInterval = 0.3;
 extern const float scanPeriod = 0.1;
 extern const int systemDelay = 0;
 extern const int imuQueLength = 200;
-extern const string imuTopic = "/imu/data";
+extern const string imuTopic = "/im/data";
 
 
 extern const float sensorMountAngle = 0.0;

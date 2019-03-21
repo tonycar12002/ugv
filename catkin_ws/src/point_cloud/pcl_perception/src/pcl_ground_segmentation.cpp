@@ -119,7 +119,7 @@ void GroundSegmentation::cbCloud(const sensor_msgs::PointCloud2ConstPtr& cloud_m
 
     /*
 	***************************************************************
-		Ground remove
+		Ground remove by scan angle
 	***************************************************************
 	*/
     PointCloudXYZ::Ptr cloud_ground(new PointCloudXYZ);
@@ -158,7 +158,7 @@ void GroundSegmentation::cbCloud(const sensor_msgs::PointCloud2ConstPtr& cloud_m
             cloud_groud_size += 1;
             cloud_ground->points.push_back(point);
         }
-        else if(ground_point[i] == 0 && point_exist[i] == 1){
+        else if(point_exist[i] == 1){
             cloud_remove_ground_size += 1;
             cloud_remove_ground->points.push_back(point);
         }

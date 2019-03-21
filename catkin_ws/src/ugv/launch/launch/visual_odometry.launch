@@ -1,0 +1,28 @@
+<launch>    
+    <arg name="sim" default="false"/>
+    <arg name="odom_tf" default="false"/>
+    <param name="use_sim_time" value="$(arg sim)"/>
+
+    <arg name="veh" default="/"/> 
+    
+    <group ns="$(arg veh)">
+        <node pkg="tf" if="$(eval veh == '/')" type="static_transform_publisher" name="camera_init_to_map" args="0 0 0 1.570795   0        1.570795 odom    camera_init 10" />
+        <node pkg="tf" unless="$(eval veh == '/')" type="static_transform_publisher" name="camera_init_to_map" args="0 0 0 0 0 0 $(arg veh)/odom $(arg veh)/camera_init 100" />
+        <!--node pkg="tf" if="$(eval veh == '/')" type="static_transform_publisher" name="base_link_to_camera" args="0 0 0 -1.570795 -1.570795 0 camera base_link   10" />
+        <node pkg="tf" unless="$(eval veh == '/')" type="static_transform_publisher" name="base_link_to_camera" args="0 0 0 0 0 0 $(arg veh)/camera $(arg veh)/base_link 100" /-->
+        <group ns="loam">
+            <remap from="velodyne_points" to="/velodyne_points"/>
+            <include file="$(find lego_loam)/launch/run.launch">
+            </include>
+
+            <group if="$(arg odom_tf)">
+                <remap from="odom" to="integrated_to_init"/>
+                <node pkg="gazebo_odom" type="transfer_visualodom.py" name="transfer_odom"  output="screen" clear_params="true" required="true">
+                    <param name="veh"   type="string"   value="$(arg veh)"/>
+                </node>
+            <group>
+        </group>
+
+    </group>
+
+</launch>

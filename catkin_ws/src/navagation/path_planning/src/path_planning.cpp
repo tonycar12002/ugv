@@ -94,6 +94,11 @@ PathPlanning::PathPlanning(ros::NodeHandle& n){
 
 }
 void PathPlanning::Planning(const ros::TimerEvent& event){
+    /*
+    ***************************************************************
+        Planning timer
+    ***************************************************************
+    */
     if(waypt_list.empty() || !receive_goal){
         std_msgs::Bool arrive;
         arrive.data = true;

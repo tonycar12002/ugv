@@ -32,7 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          RESOLUTION_VGA    -> 672*376,   available framerates: 15, 30, 60, 100 fps. -->
 
     <!-- GPU ID-->
-    <arg name="gpu_id"                default="-1" />
+    <arg name="gpu_id"                default="0" />
 
     <!-- Definition coordinate frames -->
     <arg name="publish_tf"                    default="false" />

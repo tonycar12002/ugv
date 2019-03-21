@@ -10,7 +10,7 @@ The repo stores the code, algorithms...etc except the gazebo part
 - CUDA 9.0
 
 ```
-$ docker pull argnctu/subt_16 
+$ docker pull argnctu/subt_16 or docker build -t ugv -f Dockerfile .
 $ ./docker_run -u
 or 
 open same docker

@@ -16,7 +16,9 @@ or
 open same docker
 $ ./docker_run -u -s
 ```
-
+## How to run
+* [Husky Joystick Control](https://github.com/tonycar12002/ugv/wiki/Husky_Joystick_Control)
+* [Husky Waypoint Navagation](https://github.com/tonycar12002/ugv/wiki/Waypoint_Navagation)
 ## Hardware
 
 |Name | Type |

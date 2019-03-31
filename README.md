@@ -1,6 +1,6 @@
 # UGV
-The repo stores the code, algorithms...etc except the gazebo part
-
+Husky waypoint navagation and avoid obstacles
+![husky](https://github.com/tonycar12002/ugv/images/husky.jpg)
 ## Docker
 - ROS kinetic 
 - Ubuntu 16.04
@@ -19,6 +19,10 @@ $ ./docker_run -u -s
 ## How to run
 * [Husky Joystick Control](https://github.com/tonycar12002/ugv/wiki/Husky_Joystick_Control)
 * [Husky Waypoint Navagation](https://github.com/tonycar12002/ugv/wiki/Waypoint_Navagation)
+
+## Videos
+[waypt navagation](https://www.youtube.com/watch?v=ns-YryCcy-s)
+
 ## Hardware
 
 |Name | Type |

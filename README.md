@@ -1,6 +1,6 @@
 # UGV
 Husky waypoint navagation and avoid obstacles
-![husky](https://github.com/tonycar12002/ugv/tree/master/images)
+![husky](https://github.com/tonycar12002/ugv/tree/master/images/husky.jpg)
 ## Docker
 - ROS kinetic 
 - Ubuntu 16.04

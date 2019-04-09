@@ -40,3 +40,6 @@ target_link_libraries(pcl_ground_segmentation ${catkin_LIBRARIES})
 
 add_executable(save_pcd src/save_pcd.cpp)
 target_link_libraries(save_pcd ${catkin_LIBRARIES})
+
+add_executable(pcl_triangle_mesh src/pcl_triangle_mesh.cpp)
+target_link_libraries(pcl_triangle_mesh ${catkin_LIBRARIES})

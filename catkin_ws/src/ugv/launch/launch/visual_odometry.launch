@@ -1,6 +1,6 @@
 <launch>    
-    <arg name="sim" default="false"/>
-    <arg name="odom_tf" default="false"/>
+    <arg name="sim" default="true"/>
+    <arg name="odom_tf" default="true"/>
     <param name="use_sim_time" value="$(arg sim)"/>
 
     <arg name="veh" default="/"/> 
@@ -20,7 +20,7 @@
                 <node pkg="gazebo_odom" type="transfer_visualodom.py" name="transfer_odom"  output="screen" clear_params="true" required="true">
                     <param name="veh"   type="string"   value="$(arg veh)"/>
                 </node>
-            <group>
+            </group>
         </group>
 
     </group>

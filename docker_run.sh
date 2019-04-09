@@ -36,7 +36,7 @@ else
 	nvidia-docker run --name $docker_name --rm -it --net=host --privileged -v /dev:/dev \
 				-v /etc/localtime:/etc/localtime:ro -v /var/run/docker.sock:/var/run/docker.sock \
 				-v ~/.bashrc:/root/.bashrc \
-				-v /home/$USER/SubT:/root/SubT \
+				-v /home/$USER/ugv:/root/ugv \
 				--env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" $docker_target
 fi
 

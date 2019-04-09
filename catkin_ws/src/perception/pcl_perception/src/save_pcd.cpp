@@ -22,7 +22,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "save_pcd_node");
   ros::Subscriber sub;
   ros::NodeHandle nh;
-  sub = nh.subscribe("/loam/recent_cloud", 1, cb);
+  sub = nh.subscribe("/loam/laser_cloud_surround", 1, cb);
   while(ros::ok()) ros::spinOnce();
   return 0;
 }

@@ -1,8 +1,12 @@
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
+#include <pcl/io/obj_io.h>
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/features/normal_3d.h>
 #include <pcl/surface/gp3.h>
+#include <iostream>
+
+using namespace std;
 
 int main (int argc, char** argv)
 {
@@ -38,14 +42,14 @@ int main (int argc, char** argv)
   pcl::PolygonMesh triangles;
 
   // Set the maximum distance between connected points (maximum edge length)
-  gp3.setSearchRadius (0.025);
+  gp3.setSearchRadius (2.0);
 
   // Set typical values for the parameters
   gp3.setMu (2.5);
   gp3.setMaximumNearestNeighbors (100);
-  gp3.setMaximumSurfaceAngle(M_PI/4); // 45 degrees
+  gp3.setMaximumSurfaceAngle(M_PI/3); // 45 degrees
   gp3.setMinimumAngle(M_PI/18); // 10 degrees
-  gp3.setMaximumAngle(2*M_PI/3); // 120 degrees
+  gp3.setMaximumAngle(3*M_PI/4); // 120 degrees
   gp3.setNormalConsistency(false);
 
   // Get result
@@ -57,8 +61,8 @@ int main (int argc, char** argv)
   std::vector<int> parts = gp3.getPartIDs();
   std::vector<int> states = gp3.getPointStates();
 
-  
-  pcl::io::saveVTKFile("testmesh.vtk", triangles);  
+  cout << triangles.polygons.size() << endl;
+  pcl::io::saveOBJFile("pcl_saveOBJFile.obj", triangles);
   // Finish
   return (0);
 }

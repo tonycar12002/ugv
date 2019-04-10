@@ -29,6 +29,7 @@ Publish:
 #include <pcl/io/pcd_io.h>
 #include <pcl_ros/point_cloud.h>
 #include <pcl/point_types.h>
+#include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl_ros/transforms.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/common/transforms.h>
@@ -121,7 +122,7 @@ void PreprocessNode::cbCloud(const sensor_msgs::PointCloud2ConstPtr& cloud_msg){
 	// transfer ros msg to point cloud
 	PointCloudXYZ::Ptr cloud(new PointCloudXYZ);
 	PointCloudXYZ::Ptr cloud_tmp(new PointCloudXYZ);
-	PointCloudXYZ::Ptr cloud_odom(new PointCloudXYZ);
+	PointCloudXYZ::Ptr cloud_filtered(new PointCloudXYZ);
 	
 	pcl::fromROSMsg(*cloud_msg, *cloud_tmp);
 
@@ -174,11 +175,24 @@ void PreprocessNode::cbCloud(const sensor_msgs::PointCloud2ConstPtr& cloud_msg){
 	vg.filter(*cloud_voxel);
 	*/
 
+	/*
+	***************************************************************
+		statistical_outlier_removal
+	***************************************************************
+	*/	
+	// Create the filtering object
+	pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
+	sor.setInputCloud (cloud);
+	sor.setMeanK (50);
+	sor.setStddevMulThresh (1.0);
+	sor.filter (*cloud_filtered);
+
+
 	clock_t t_end = clock();
 	//cout << "PointCloud preprocess time taken = " << (t_end-t_start)/(double)(CLOCKS_PER_SEC) << endl;
 
 	sensor_msgs::PointCloud2 cloud_out;
-	pcl::toROSMsg(*cloud, cloud_out);
+	pcl::toROSMsg(*cloud_filtered, cloud_out);
 	cloud_out.header = cloud_msg->header;
 	cloud_out.header.stamp = ros::Time::now();
 	pub_cloud.publish(cloud_out);
